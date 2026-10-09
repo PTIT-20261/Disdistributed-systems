@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<title></title>
+	<style type="text/css">
+		p { text-align: justify; line-height: 135%; margin-bottom: 0.08in; font-size: 12pt; font-family: "Liberation Serif", "Times New Roman", serif; color: #000000 }
+		p.exercise-title { font-size: 12pt; font-weight: bold; margin-top: 0.19in; font-family: "Liberation Serif", "Times New Roman", serif; color: #000000 }
+		ul, ol { margin-top: 0in; margin-bottom: 0.08in; }
+		li { text-align: justify; line-height: 135%; font-size: 12pt; font-family: "Liberation Serif", "Times New Roman", serif; color: #000000; }
+		b, strong { font-weight: bold; color: #000000; }
+		code { font-family: "Liberation Mono", "Courier New", monospace; font-size: 10.5pt; }
+		pre { font-family: "Liberation Mono", "Courier New", monospace; font-size: 10pt; line-height: 120%; margin-top: 0.05in; margin-bottom: 0.08in; }
+	</style>
+</head>
+<body lang="en-US" text="#000000" dir="ltr">
+
+<p class="exercise-title">Bài 1: Cho một ví dụ về trường hợp địa chỉ của thực thể E cần phải được tiếp tục phân giải thành một địa chỉ khác thì mới có thể thực sự truy cập được E.</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Phân giải địa chỉ IP thành địa chỉ MAC (Giao thức ARP):</b> Khi một máy tính muốn gửi dữ liệu tới máy chủ có IP 192.168.1.50 trong cùng mạng LAN, địa chỉ IP đó là địa chỉ tầng mạng của điểm truy cập. Tuy nhiên, phần cứng card mạng không thể gửi dữ liệu trực tiếp bằng IP. Máy gửi phải dùng giao thức ARP để phân giải IP thành địa chỉ MAC vật lý (ví dụ: 00:1A:2B:3C:4D:5E) thì mới có thể thực sự đóng khung và truyền dữ liệu trên đường truyền vật lý.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Địa chỉ IP ảo trong bộ cân bằng tải (Virtual IP / Reverse Proxy):</b> Một dịch vụ Web được công bố với một địa chỉ IP ảo công khai (VIP). Khi gói tin đến bộ cân bằng tải, địa chỉ VIP này tiếp tục được ánh xạ/phân giải nội bộ thành địa chỉ IP mạng nội bộ của một máy chủ backend cụ thể đang rảnh rỗi.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 2: Bạn có coi URL http://www.acme.org/index.html là độc lập vị trí không? Còn http://www.acme.nl/index.html thì sao?</p>
+<p><b>Cả hai địa chỉ URL trên đều KHÔNG độc lập vị trí (Location Dependent):</b></p>
+<ul>
+	<li><p style="margin-bottom: 0in">Định dạng URL bản chất là một bộ định vị tài nguyên (Uniform Resource Locator). Nó gắn chặt tên miền của máy chủ Web (www.acme.org hoặc www.acme.nl) cùng với đường dẫn thư mục và tên tệp tin cụ thể (index.html). Khi máy chủ Web đổi tên miền, đổi hosting, hoặc khi tệp tin bị đổi tên/di chuyển, URL này sẽ bị hỏng ngay (lỗi 404).</p></li>
+	<li><p style="margin-bottom: 0in">Riêng http://www.acme.nl/index.html còn phụ thuộc vị trí sâu sắc hơn về mặt địa lý/quốc gia, do tên miền cấp cao nhất là .nl chỉ định rằng tổ chức hoặc máy chủ này nằm trong thẩm quyền không gian địa lý của Hà Lan (Netherlands).</p></li>
+</ul>
+
+<p class="exercise-title">Bài 3: Cho một số ví dụ thực tế về định danh thực sự (True Identifier).</p>
+<p>Một định danh thực sự theo Tanenbaum phải thỏa mãn 3 tính chất: (1) Chỉ trỏ tối đa 1 thực thể; (2) Thực thể chỉ có tối đa 1 định danh; (3) Không bao giờ thay đổi và không tái sử dụng. Các ví dụ:</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Mã số sách tiêu chuẩn quốc tế (ISBN):</b> Mỗi ấn bản sách được cấp một mã số ISBN duy nhất trên toàn cầu và mã này không bao giờ được cấp lại cho bất kỳ cuốn sách nào khác.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Số Căn cước công dân / Số An sinh xã hội (Citizen ID / SSN):</b> Được cấp duy nhất cho mỗi công dân và không bao giờ tái cấp cho công dân khác kể cả khi người đó đã qua đời.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Địa chỉ Ethernet MAC phần cứng do nhà sản xuất ghi cố định:</b> Chuỗi 48-bit định danh duy nhất cho từng bo mạch mạng phần cứng xuất xưởng trên toàn cầu.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Mã định danh duy nhất toàn cầu UUID (Universally Unique Identifier):</b> Chuỗi 128-bit sinh ngẫu nhiên theo chuẩn RFC 4122 để định danh các đối tượng hoặc bản ghi dữ liệu phân tán.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 4: Một định danh có được phép chứa thông tin miêu tả về thực thể mà nó trỏ tới hay không?</p>
+<p>Về mặt kỹ thuật là <b>có thể</b>, nhưng trong thiết kế hệ thống phân tán thì <b>không nên và tiềm ẩn rủi ro lớn</b>:</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Nguy cơ vi phạm tính bất biến (Immutability):</b> Các thuộc tính của một thực thể (phòng ban, vị trí địa lý, IP, chức vụ) rất dễ thay đổi theo thời gian. Nếu định danh chứa thông tin miêu tả (ví dụ: mã nhân viên IT_HANOI_001), khi người đó chuyển sang phòng Kế toán hoặc vào TP.HCM, định danh này sẽ trở nên mâu thuẫn với thực tế.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Xung đột nguyên tắc:</b> Nếu đổi định danh thì vi phạm nguyên tắc "định danh không bao giờ thay đổi". Còn nếu không đổi thì định danh chứa thông tin sai lệch gây nhầm lẫn nghiêm trọng. Do đó, một định danh chuẩn chỉ nên là một chuỗi bit/số thuần túy (opaque identifier) không mang ngữ nghĩa thuộc tính.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 5: Phác thảo một phương pháp hiệu quả để tạo ra các định danh duy nhất toàn cầu (GUID/UUID) mà không cần máy chủ trung tâm.</p>
+<p>Sử dụng chuẩn <b>UUID Phiên bản 1</b> (theo RFC 4122) kết hợp không gian và thời gian:</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>48-bit Địa chỉ MAC phần cứng (Node ID):</b> Sử dụng địa chỉ MAC của card mạng máy tính tạo định danh, đảm bảo tính duy nhất tuyệt đối về mặt không gian (không hai máy tính nào sinh trùng).</p></li>
+	<li><p style="margin-bottom: 0in"><b>60-bit Nhãn thời gian (Timestamp):</b> Đếm số khoảng thời gian 100 nano-giây trôi qua kể từ ngày 15/10/1582, đảm bảo trên cùng một máy tính, các định danh sinh ra tại các thời điểm khác nhau sẽ không bao giờ trùng nhau.</p></li>
+	<li><p style="margin-bottom: 0in"><b>14-bit Chuỗi đồng hồ (Clock Sequence):</b> Bộ đếm ngẫu nhiên được tăng lên nếu đồng hồ hệ thống bị chỉnh lùi hoặc khởi động lại máy, chống trùng lặp khi thời gian sai lệch.</p></li>
+	<li><p style="margin-bottom: 0in"><b>6-bit Cờ phiên bản và biến thể (Version &amp; Variant).</b></p></li>
+	<li><p style="margin-bottom: 0in"><b>Ưu điểm:</b> Mọi máy tính đều tự sinh mã cục bộ với tốc độ hàng triệu mã/giây mà không cần máy chủ điều phối trung tâm.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 6: Xét hệ thống Chord trong Hình 5-4, giả sử nút 7 vừa gia nhập mạng. Bảng ngón tay (Finger Table) của nút 7 sẽ là gì và có những thay đổi nào ở bảng ngón tay của các nút khác?</p>
+<p>Xét vòng băm Chord với m = 3 (vòng 8 vị trí: 0..7). Giả sử các nút hiện có là Node 0, Node 1, Node 3, và bây giờ Node 7 gia nhập mạng.</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>1. Tính bảng Finger Table của Node 7:</b> Công thức FT_p[i] = succ((p + 2^(i-1)) mod 2^m) với 1 &le; i &le; 3:</p>
+	<ul>
+		<li><p style="margin-bottom: 0in">Mục 1 (i=1): succ((7 + 2^0) mod 8) = succ(8 mod 8) = succ(0) = 0.</p></li>
+		<li><p style="margin-bottom: 0in">Mục 2 (i=2): succ((7 + 2^1) mod 8) = succ(9 mod 8) = succ(1) = 1.</p></li>
+		<li><p style="margin-bottom: 0in">Mục 3 (i=3): succ((7 + 2^2) mod 8) = succ(11 mod 8) = succ(3) = 3.</p></li>
+		<li><p style="margin-bottom: 0in">Kết quả: <b>FT_7 = [0, 1, 3]</b>.</p></li>
+	</ul></li>
+	<li><p style="margin-bottom: 0in"><b>2. Thay đổi ở bảng ngón tay của các nút khác:</b> Trước khi Node 7 vào mạng, nút kế tiếp (successor) của các khóa 4, 5, 6, 7 đều là Node 0. Khi Node 7 xuất hiện, Node 7 trở thành nút chịu trách nhiệm mới cho các khóa trong khoảng (3, 7]. Cụ thể, Node 3 trước đây có mục thứ 3 là FT_3[3] = succ(7) = 0; nay được cập nhật lại thành: <b>FT_3[3] = 7</b>.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 7: Xét hệ thống DHT Chord trong đó k bit của không gian định danh m-bit được dành riêng cho các siêu nút (superpeer). Nếu các định danh được gán ngẫu nhiên, kỳ vọng sẽ có bao nhiêu siêu nút trong một hệ thống có N nút?</p>
+<ul>
+	<li><p style="margin-bottom: 0in">Không gian định danh có tổng cộng 2^m giá trị.</p></li>
+	<li><p style="margin-bottom: 0in">Để một nút trở thành siêu nút, định danh ngẫu nhiên của nó phải khớp với một tiền tố k bit xác định. Số lượng định danh thỏa mãn điều kiện này là 2^(m-k).</p></li>
+	<li><p style="margin-bottom: 0in">Xác suất để một nút ngẫu nhiên trở thành siêu nút là: P(superpeer) = 2^(m-k) / 2^m = 1 / (2^k).</p></li>
+	<li><p style="margin-bottom: 0in">Với hệ thống gồm N nút được gán ngẫu nhiên độc lập, số lượng siêu nút kỳ vọng là: <b>E[số siêu nút] = N * P(superpeer) = N / (2^k)</b>.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 8: Khi chèn thêm một nút vào hệ thống Chord, ta có cần phải cập nhật ngay lập tức tất cả các bảng ngón tay không?</p>
+<p><b>Hoàn toàn KHÔNG cần thiết.</b></p>
+<ul>
+	<li><p style="margin-bottom: 0in">Hệ thống Chord sử dụng <b>Giao thức ổn định định kỳ (Periodic Stabilization Protocol)</b>. Khi một nút mới gia nhập, nó chỉ cần tìm đúng nút kế tiếp trực tiếp (successor) và cập nhật liên kết predecessor của mình. Khi hai liên kết kế tiếp và liền trước chính xác, tính toàn vẹn của vòng băm cơ bản đã được bảo toàn.</p></li>
+	<li><p style="margin-bottom: 0in">Bảng ngón tay của các nút khác sẽ dần dần được cập nhật tự động trong nền qua hàm kiểm tra định kỳ fix_fingers. Thuật toán định tuyến của Chord vẫn chuyển tiếp thông điệp tới đích chính xác mà không bao giờ gây lỗi hệ thống.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 9: Nhược điểm lớn nhất của việc tra cứu đệ quy (Recursive Lookup) khi phân giải khóa trong hệ thống DHT là gì?</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Độ tin cậy kém và khó phát hiện lỗi:</b> Nút yêu cầu ban đầu gửi truy vấn đi và thụ động ngồi chờ kết quả cuối cùng quay về. Toàn bộ quá trình phụ thuộc vào một chuỗi các nút trung gian chuyển tiếp. Nếu một nút trung gian bị sập hoặc mất kết nối, chuỗi truy vấn bị đứt gãy; nút nguồn chỉ biết bị timeout mà không thể xác định được mắt xích nào đã gặp sự cố.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Gánh nặng tài nguyên:</b> Các nút trung gian phải duy trì trạng thái kết nối mở và lưu vết bộ nhớ cho từng truy vấn đang chờ phản hồi.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Khó khăn bảo mật:</b> Khó kiểm soát việc các nút trung gian độc hại can thiệp hoặc thay đổi nội dung câu trả lời.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 10: Anycasting là cơ chế định vị trong đó một dịch vụ dùng chung một địa chỉ IP và gói tin được chuyển tới máy chủ gần nhất. Hãy phác thảo cách cài đặt dịch vụ Anycast dựa trên dịch vụ định vị phân cấp (Globe).</p>
+<ul>
+	<li><p style="margin-bottom: 0in">Mạng lưới được phân chia thành cây các miền (domains) từ cục bộ đến toàn cầu.</p></li>
+	<li><p style="margin-bottom: 0in">Khi nhiều máy chủ cùng cung cấp một dịch vụ Anycast, mỗi máy chủ đăng ký bản ghi vị trí của mình tại <b>Nút thư mục lá (Leaf Directory Node)</b> thuộc miền cục bộ của nó.</p></li>
+	<li><p style="margin-bottom: 0in">Các nút thư mục ở các tầng cao hơn trên cây sẽ lưu trữ <b>nhiều con trỏ đồng thời</b> trỏ xuống các nhánh con khác nhau có chứa máy chủ dịch vụ này.</p></li>
+	<li><p style="margin-bottom: 0in">Khi Client gửi yêu cầu Anycast, truy vấn xuất phát từ nút lá của Client đi dần lên gốc. Tại nút thư mục đầu tiên chứa thông tin dịch vụ, nút này sẽ chọn trả về con trỏ trỏ xuống máy chủ nằm trong cùng nhánh con gần nhất với Client (đảm bảo tính cục bộ về địa lý và topo mạng).</p></li>
+</ul>
+
+<p class="exercise-title">Bài 11: Xét phương pháp hai tầng dựa trên vị trí gốc (Two-tiered Home-based Approach) như một trường hợp đặc biệt của dịch vụ định vị phân cấp, thì nút gốc (root) nằm ở đâu?</p>
+<p><b>Nút gốc (Root) chính là Home Agent (Trạm gốc) của thực thể:</b></p>
+<ul>
+	<li><p style="margin-bottom: 0in">Trong phương pháp tiếp cận hai tầng, hệ thống chỉ có đúng 2 tầng: Tầng cục bộ (miền hiện tại thực thể ghé thăm, cung cấp Care-of Address) và Tầng toàn cầu (Home Agent).</p></li>
+	<li><p style="margin-bottom: 0in">Mọi truy vấn từ bên ngoài nếu không tìm thấy thực thể ở mạng cục bộ đều bắt buộc phải tìm đến Home Agent. Home Agent nắm giữ thông tin toàn cục cuối cùng về vị trí thực tế, đóng vai trò chính là nút gốc tối cao trong cây phân cấp suy biến này.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 12: Giả sử biết một thực thể di động hầu như không bao giờ rời khỏi miền D (hoặc nếu có thì sẽ quay lại ngay). Thông tin này có thể được sử dụng như thế nào để tăng tốc thao tác tra cứu trong dịch vụ định vị phân cấp?</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Chuyển tiếp truy vấn trực tiếp tới miền D (Shortcut Lookups):</b> Thay vì các tiến trình ngoài miền D phải bắt đầu tra cứu từ tầng lá đi lên tận nút gốc toàn cầu rồi mới duyệt xuống miền D, ta cấu hình để mọi truy vấn tìm thực thể này được gửi thẳng tới nút thư mục gốc của miền D.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Cấu hình bộ đệm lâu dài (Long TTL Caching):</b> Nút thư mục gốc của miền D được nhân bản rộng rãi và gán thời gian tồn tại bản ghi trong bộ đệm (TTL) rất lớn, bởi vì xác suất thực thể rời khỏi miền D là cực kỳ nhỏ.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 13: Trong dịch vụ định vị phân cấp có độ sâu k, cần cập nhật tối đa bao nhiêu bản ghi vị trí khi một thực thể di động chuyển đổi vị trí?</p>
+<ul>
+	<li><p style="margin-bottom: 0in">Giả sử cây phân cấp có độ sâu k tầng (từ gốc tầng 0 đến lá tầng k).</p></li>
+	<li><p style="margin-bottom: 0in">Trường hợp xấu nhất xảy ra khi thực thể di chuyển từ lá A sang lá B nằm ở hai nhánh cây hoàn toàn xa nhau, trong đó tổ tiên chung thấp nhất của A và B chính là Nút gốc (Root) ở tầng 0.</p></li>
+	<li><p style="margin-bottom: 0in">Khi đó cần thực hiện hai thao tác: (1) Xóa đường dẫn vị trí cũ: Xóa con trỏ tại k nút thư mục dọc theo đường từ lá A lên tới dưới nút gốc (k thao tác). (2) Thêm đường dẫn vị trí mới: Ghi nhận con trỏ tại k nút thư mục dọc theo đường từ nút gốc đi xuống lá B (k thao tác).</p></li>
+	<li><p style="margin-bottom: 0in">Tổng số bản ghi vị trí cần cập nhật tối đa là: <b>2k bản ghi</b>.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 14: Xét thực thể di chuyển từ A đến B, đi qua nhiều vị trí trung gian lưu lại ngắn ngày trước khi định cư tại B. Cập nhật địa chỉ lên cây phân cấp tốn nhiều thời gian nên cần tránh ở các điểm tạm thời. Làm thế nào để định vị thực thể tại các vị trí trung gian này?</p>
+<p>Sử dụng <b>Con trỏ chuyển tiếp tạm thời (Forwarding Pointers)</b>:</p>
+<ul>
+	<li><p style="margin-bottom: 0in">Khi rời vị trí A đi qua các điểm tạm thời T1, T2,..., thực thể không cập nhật lên cây phân cấp (bản ghi tại cây vẫn trỏ về A).</p></li>
+	<li><p style="margin-bottom: 0in">Tại A, thực thể để lại con trỏ trỏ tới T1; tại T1 để lại con trỏ trỏ tới T2.</p></li>
+	<li><p style="margin-bottom: 0in">Ai muốn tìm thực thể sẽ truy vấn cây phân cấp, được dẫn tới A, và lần theo chuỗi con trỏ ngắn để tìm thấy thực thể tại vị trí trung gian hiện thời.</p></li>
+	<li><p style="margin-bottom: 0in">Khi thực thể đã đến đích B và định cư lâu dài, nó mới cập nhật chính thức lên cây phân cấp để trỏ thẳng tới B, đồng thời gửi thông báo xóa chuỗi con trỏ chuyển tiếp cũ từ A.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 15: Nút gốc trong dịch vụ định vị phân cấp có thể trở thành điểm nghẽn cổ chai. Vấn đề này có thể được giải quyết triệt để bằng cách nào?</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Phân mảnh nút gốc (Partitioning / Sharding):</b> Chia không gian định danh thực thể thành các phần độc lập (băm định danh: RootServer = hash(id) mod N). Mỗi máy chủ chỉ quản lý một tập con thực thể, giúp san đều tải cho N máy chủ gốc.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Nhân bản nút gốc kết hợp định tuyến Anycast (Replication &amp; Anycasting):</b> Triển khai nhiều bản sao của nút gốc trên khắp các châu lục, đồng bộ dữ liệu và dùng BGP Anycast để người dùng tự động kết nối tới bản sao gần nhất về mặt địa lý.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 16: Cho ví dụ về cách thức hoạt động của cơ chế đóng (Closure Mechanism) đối với một địa chỉ URL.</p>
+<p>Đối với một URL như http://fit.ptit.edu.vn/index.html:</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Bước 1 (Xác định giao thức và cổng):</b> Trình duyệt đọc tiền tố http://. Cơ chế đóng được nạp sẵn trong phần mềm trình duyệt quy định rằng tiền tố này tương ứng với giao thức HTTP trên cổng chuẩn 80.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Bước 2 (Bối cảnh phân giải tên miền):</b> Trình duyệt gọi DNS Resolver của hệ điều hành. Cơ chế đóng ở tầng này là tệp cấu hình mạng cục bộ (như /etc/resolv.conf trên Linux), nơi lưu sẵn địa chỉ IP của Local DNS Server.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Bước 3 (Bối cảnh gốc DNS):</b> Local DNS Server sử dụng cơ chế đóng của nó là tệp "root hints" (danh sách địa chỉ IP cố định của 13 cụm Root DNS trên thế giới) để bắt đầu phân giải từ nút gốc.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 17: Giải thích sự khác biệt giữa liên kết cứng (Hard Link) và liên kết mềm (Soft / Symbolic Link) trong hệ thống UNIX. Có những việc làm được với liên kết cứng mà không làm được với liên kết mềm hoặc ngược lại không?</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Bản chất:</b> Hard Link trỏ trực tiếp tới cùng số hiệu inode của tệp trên đĩa (dữ liệu chỉ bị xóa khi mọi hard link bị xóa). Soft Link là tệp độc lập có inode riêng, bên trong chứa chuỗi văn bản là đường dẫn tới tệp đích (nếu tệp đích bị xóa thì trở thành liên kết gãy).</p></li>
+	<li><p style="margin-bottom: 0in"><b>Soft Link làm được mà Hard Link không làm được:</b> Soft link có thể liên kết xuyên qua các hệ thống tệp tin (filesystems) khác nhau và có thể liên kết tới thư mục (Hard link bị cấm tạo tới thư mục để tránh tạo vòng lặp vô hạn).</p></li>
+	<li><p style="margin-bottom: 0in"><b>Hard Link làm được mà Soft Link không làm được:</b> Khi tệp gốc bị đổi tên hoặc di chuyển vị trí trong cùng phân vùng, Hard link vẫn đọc được nội dung bình thường (do trỏ vào inode). Soft link sẽ bị hỏng ngay lập tức vì đường dẫn văn bản bên trong nó không còn tồn tại.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 18: Các máy chủ tên miền cấp cao trong DNS (gần root server) thường không hỗ trợ phân giải đệ quy. Liệu hiệu năng hệ thống có tăng lên đáng kể nếu các máy chủ này hỗ trợ phân giải đệ quy không? Tại sao?</p>
+<p><b>Hiệu năng KHÔNG tăng lên, thậm chí sẽ làm sụp đổ toàn bộ Internet:</b></p>
+<ul>
+	<li><p style="margin-bottom: 0in">Các máy chủ Root DNS và TLD DNS phục vụ hàng trăm tỷ truy vấn mỗi ngày. Nếu thực hiện đệ quy, máy chủ gốc sẽ phải tự mình gửi tiếp yêu cầu và duy trì trạng thái kết nối mở cho hàng chục triệu yêu cầu đồng thời, làm cạn kiệt RAM và năng lực tính toán của máy chủ gốc ngay lập tức.</p></li>
+	<li><p style="margin-bottom: 0in">Cơ chế phân giải lặp (Iterative Resolution) giúp máy chủ gốc hoạt động theo cơ chế phi trạng thái (Stateless), phản hồi cực nhanh chỉ trong vài mili-giây và giải phóng tài nguyên ngay lập tức. Nhiệm vụ lưu đệm (cache) và đệ quy được đẩy về cho các Local DNS Server ở rìa mạng.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 19: Giải thích cách sử dụng hệ thống DNS để hiện thực hóa giải pháp dựa trên vị trí gốc (Home-based approach) nhằm định vị các máy chủ di động.</p>
+<ul>
+	<li><p style="margin-bottom: 0in">Mỗi máy chủ di động được cấp một tên miền cố định (ví dụ: laptop.workplace.org) đóng vai trò là Home Address.</p></li>
+	<li><p style="margin-bottom: 0in">Authoritative Name Server của miền workplace.org đóng vai trò là <b>Home Agent</b>.</p></li>
+	<li><p style="margin-bottom: 0in">Khi máy chủ di động di chuyển và nhận địa chỉ IP mới (Care-of Address) từ DHCP, nó dùng giao thức <b>Cập nhật động DNS (Dynamic DNS Update - RFC 2136)</b> để cập nhật bản ghi A của mình tại Authoritative Name Server.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Điều kiện bắt buộc:</b> Thời gian sống của bản ghi (TTL) phải được đặt về giá trị rất nhỏ (vài giây hoặc bằng 0) để ngăn các máy chủ đệm trung gian lưu lại địa chỉ IP cũ, đảm bảo các Client luôn nhận được địa chỉ IP cập nhật mới nhất.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 20: Điểm gắn kết (Mounting Point) được tra cứu như thế nào trong hầu hết các hệ thống UNIX?</p>
+<ul>
+	<li><p style="margin-bottom: 0in">Kernel duy trì bảng Mount Table trong bộ nhớ lưu các ánh xạ giữa cặp (mã hệ thống tệp, số inode của thư mục điểm gắn kết) và superblock của hệ thống tệp được gắn.</p></li>
+	<li><p style="margin-bottom: 0in">Khi duyệt đường dẫn tệp tin, tại mỗi inode, kernel kiểm tra cờ trạng thái xem inode đó có được đánh dấu là điểm gắn kết hay không.</p></li>
+	<li><p style="margin-bottom: 0in">Nếu đúng, kernel tra cứu Mount Table để chuyển hướng duyệt từ inode của thư mục hiện tại sang <b>inode gốc (Root Inode, thường là inode 2)</b> của hệ thống tệp mới được gắn vào đó và tiếp tục hành trình duyệt đường dẫn.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 21: Xét một hệ thống tệp phân tán sử dụng không gian tên riêng cho từng người dùng (Per-user name spaces). Liệu tên trong các không gian tên riêng này có thể dùng để chia sẻ tài nguyên giữa hai người dùng khác nhau không?</p>
+<p><b>Hoàn toàn có thể thực hiện được</b> bằng các cơ chế:</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Xuất khẩu và Gắn kết (Exporting and Mounting):</b> Người dùng A xuất khẩu một nhánh thư mục của mình ra mạng. Người dùng B tạo một điểm gắn kết trong không gian tên riêng của B và gắn thư mục của A vào đó. B truy cập tài nguyên của A bằng tên đường dẫn thuộc không gian tên của chính mình.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Sử dụng tiền tố toàn cục quy ước (Global Prefix):</b> Định nghĩa tiền tố toàn cục (ví dụ: /users/userA/documents/file.txt). Khi chia sẻ, A gửi cho B đường dẫn toàn cục này; trình quản lý không gian tên phía B tự nhận diện tiền tố và điều hướng tới thư mục của A.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 22: Trong DNS, để ủy quyền một vùng con (zone khác), cần chỉ định name server cho zone đó. Có nhất thiết phải kèm theo bản ghi địa chỉ IP (A record) của máy chủ đó không, hay chỉ cần cung cấp tên miền của máy chủ là đủ?</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>BẮT BUỘC phải kèm bản ghi A (Glue Record):</b> Khi tên miền của Name Server <b>nằm chính bên trong vùng con mà nó quản trị</b>. Ví dụ: ủy quyền zone ptit.edu.vn cho máy chủ ns1.ptit.edu.vn. Nếu không cung cấp bản ghi IP (Glue Record) tại zone cha, Client sẽ rơi vào vòng lặp vô tận: muốn tìm IP của ns1.ptit.edu.vn phải hỏi ptit.edu.vn, nhưng muốn hỏi ptit.edu.vn lại phải biết IP của ns1.ptit.edu.vn trước.</p></li>
+	<li><p style="margin-bottom: 0in"><b>CHỈ CẦN cung cấp tên miền:</b> Khi tên miền của Name Server nằm ngoài vùng con được ủy quyền (ví dụ: ủy quyền cho ns1.google.com). Client có thể tự phân giải ns1.google.com qua nhánh của Google mà không cần Glue Record.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 23: Việc đếm số lượng tệp tin chung là cách tiếp cận đơn giản để xác định độ gần gũi ngữ nghĩa. Giả sử bạn xây dựng mạng lớp phủ ngữ nghĩa (Semantic Overlay Network) cho các tài liệu văn bản, bạn có thể đề xuất hàm đo độ tương đồng ngữ nghĩa nào khác?</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Khoảng cách Cosine trên mô hình không gian vector TF-IDF:</b> Mỗi văn bản được trích xuất từ khóa và biểu diễn bằng vector trọng số TF-IDF. Độ tương đồng giữa hai văn bản D1 và D2 được tính bằng góc Cosine giữa hai vector: Cosine_Similarity(D1, D2) = (D1 . D2) / (||D1|| * ||D2||).</p></li>
+	<li><p style="margin-bottom: 0in"><b>Hệ số tương đồng Jaccard mở rộng trên tập thực thể ngữ nghĩa:</b> Trích xuất các thực thể có tên (người, địa danh, tổ chức) và tính tỷ lệ giữa giao và hợp của hai tập thực thể.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Không gian Nhúng ngữ nghĩa (Dense Embeddings):</b> Sử dụng các mô hình học máy (Doc2Vec, Sentence-BERT) để biến mỗi văn bản thành một vector nhúng ngữ nghĩa dày đặc và tính khoảng cách Euclid hoặc Cosine giữa chúng.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 24 (Bài tập thực hành - Lab assignment): Cài đặt và cấu hình máy chủ DNS với phần mềm BIND.</p>
+<p>Quy trình triển khai cơ bản trên Linux:</p>
+<ol>
+	<li><p style="margin-bottom: 0in"><b>Cài đặt BIND9:</b></p>
+	<pre>sudo apt update &amp;&amp; sudo apt install bind9 bind9utils dnsutils</pre></li>
+	<li><p style="margin-bottom: 0in"><b>Khai báo zone mới trong /etc/bind/named.conf.local:</b></p>
+	<pre>zone "lab.ptit" {
+    type master;
+    file "/etc/bind/zones/db.lab.ptit";
+};</pre></li>
+	<li><p style="margin-bottom: 0in"><b>Tạo tệp cấu hình vùng /etc/bind/zones/db.lab.ptit:</b></p>
+	<pre>$TTL 86400
+@   IN  SOA ns1.lab.ptit. admin.lab.ptit. (
+            2026092101 ; Serial
+            3600       ; Refresh
+            1800       ; Retry
+            604800     ; Expire
+            86400 )    ; Minimum TTL
+; Name Servers
+@       IN  NS      ns1.lab.ptit.
+ns1     IN  A       192.168.1.100
+; Mail Server
+@       IN  MX  10  mail.lab.ptit.
+mail    IN  A       192.168.1.101
+; Standard Web Server
+www     IN  A       192.168.1.102</pre></li>
+	<li><p style="margin-bottom: 0in"><b>Kiểm tra cú pháp và khởi động lại dịch vụ:</b></p>
+	<pre>named-checkconf
+named-checkzone lab.ptit /etc/bind/zones/db.lab.ptit
+sudo systemctl restart bind9</pre></li>
+	<li><p style="margin-bottom: 0in"><b>Kiểm tra phân giải bằng công cụ dig:</b></p>
+	<pre>dig @localhost www.lab.ptit
+dig @localhost mail.lab.ptit MX</pre></li>
+</ol>
+</body>
+</html>

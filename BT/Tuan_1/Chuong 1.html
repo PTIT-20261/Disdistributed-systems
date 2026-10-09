@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<title></title>
+	<meta name="generator" content="LibreOffice 26.2.6.3 (Linux)"/>
+	<meta name="created" content="2026-09-22T19:40:04.597567228"/>
+	<meta name="changed" content="2026-09-22T19:51:26.983947492"/>
+	<meta name="" content=""/>
+	<style type="text/css">
+		p { text-align: justify; line-height: 135%; margin-bottom: 0.08in; font-size: 12pt; font-family: "Liberation Serif", "Times New Roman", serif; color: #000000 }
+		p.exercise-title { font-size: 12pt; font-weight: bold; margin-top: 0.19in; font-family: "Liberation Serif", "Times New Roman", serif }
+	</style>
+</head>
+<body lang="en-US" text="#000000" dir="ltr"><p class="exercise-title">
+Bài 1: Một định nghĩa thay thế cho hệ thống phân tán
+là một tập hợp các máy tính độc lập cung cấp chế
+độ xem như một hệ thống duy nhất (hệ thống đơn),
+tức là người dùng hoàn toàn không biết rằng có nhiều
+máy tính tồn tại. Hãy đưa ra một ví dụ để chế độ
+xem này sẽ rất hữu ích.</p>
+<p><b>Ví dụ: Ứng dụng Google Photos</b></p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Bản chất phân tán:</b> Dữ
+	liệu ảnh và video của hàng tỷ người dùng được phân
+	mảnh, nhân bản (replication) và lưu trữ trên hàng nghìn
+	cụm máy chủ đặt tại nhiều trung tâm dữ liệu khắp
+	thế giới. 
+	</p></li>
+	<li><p style="margin-bottom: 0in"><b>Chế độ xem hệ thống
+	duy nhất (Single-system view):</b> Người dùng chỉ thấy một
+	thư viện ảnh thống nhất, liền mạch như đang duyệt
+	bộ nhớ cục bộ trên điện thoại, hoàn toàn không cần
+	biết ảnh của mình đang nằm rải rác ở máy chủ nào.
+		</p></li>
+	<li><p style="margin-bottom: 0in"><b>Lợi ích nổi bật của
+	chế độ xem này:</b> 
+	</p>
+	<ul>
+		<li><p style="margin-bottom: 0in"><b>Đơn giản hóa trải
+		nghiệm người dùng:</b> Người dùng chỉ thao tác tìm
+		kiếm, sao lưu, xem ảnh mà không cần bận tâm đến việc
+		quản lý vị trí file, phân bổ dung lượng giữa các
+		server hay cấu hình kết nối mạng. 
+		</p></li>
+		<li><p style="margin-bottom: 0in"><b>Che giấu lỗi (Fault
+		Tolerance/Transparency):</b> Khi một máy chủ hay trung tâm dữ
+		liệu gặp sự cố, hệ thống ngầm chuyển hướng truy
+		vấn sang cụm máy chủ dự phòng; người dùng vẫn tải
+		được ảnh mà không cảm nhận được sự gián đoạn
+		phần cứng bên dưới. 
+		</p></li>
+		<li><p><b>Dễ dàng mở rộng:</b> Google có thể nâng cấp,
+		bổ sung hàng trăm node lưu trữ hoặc tái cấu trúc mạng
+		lưới phân tán mà không làm thay đổi giao diện hay trải
+		nghiệm của người dùng. 
+		</p></li>
+	</ul>
+</ul>
+<p class="exercise-title">Bài 2: Vai trò của phần mềm trung
+gian (middleware) trong một hệ thống phân tán là gì?</p>
+<p><b>Các vai trò chính của Middleware:</b></p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Che giấu sự không đồng
+	nhất (Hiding Heterogeneity):</b> Giúp các ứng dụng viết
+	bằng các ngôn ngữ lập trình khác nhau (Java, C++,
+	Python...), chạy trên các hệ điều hành khác nhau (Linux,
+	Windows...) và kiến trúc phần cứng khác nhau có thể
+	tương tác trơn tru mà không cần viết lại mã nguồn. 
+	</p></li>
+	<li><p style="margin-bottom: 0in"><b>Cung cấp tính trong suốt
+	(Transparency):</b> Hỗ trợ xây dựng góc nhìn &quot;hệ
+	thống đơn&quot; bằng cách che giấu sự phân tán đối
+	với người dùng và lập trình viên: 
+	</p>
+	<ul>
+		<li><p style="margin-bottom: 0in"><b>Trong suốt vị trí
+		(Location Transparency):</b> Cho phép truy cập tài nguyên mà
+		không cần biết tài nguyên đó nằm ở máy nào. 
+		</p></li>
+		<li><p style="margin-bottom: 0in"><b>Trong suốt truy cập
+		(Access Transparency):</b> Đồng nhất cách gọi hàm/truy
+		xuất dữ liệu cục bộ và từ xa. 
+		</p></li>
+		<li><p style="margin-bottom: 0in"><b>Trong suốt lỗi (Failure
+		Transparency):</b> Tự động xử lý kết nối lại, điều
+		hướng khi một node gặp sự cố. 
+		</p></li>
+	</ul>
+	<li><p style="margin-bottom: 0in"><b>Hỗ trợ cơ chế giao tiếp
+	cấp cao (Communication Models):</b> Thay vì yêu cầu lập
+	trình viên làm việc trực tiếp với socket mạng cấp
+	thấp phức tạp, middleware cung cấp các mô hình giao tiếp
+	trừu tượng hơn: 
+	</p>
+	<ul>
+		<li><p style="margin-bottom: 0in"><b>Gọi thủ tục từ xa:</b>
+		RPC (Remote Procedure Call), RMI (Remote Method Invocation). 
+		</p></li>
+		<li><p style="margin-bottom: 0in"><b>Hàng đợi thông điệp /
+		Hướng thông điệp:</b> Message Broker (RabbitMQ, Apache
+		Kafka). 
+		</p></li>
+		<li><p style="margin-bottom: 0in"><b>Hướng dịch vụ / Web
+		services:</b> gRPC, REST/SOAP middleware. 
+		</p></li>
+	</ul>
+	<li><p style="margin-bottom: 0in"><b>Cung cấp các dịch vụ hệ
+	thống dùng chung (Common System Services):</b> 
+	</p>
+	<ul>
+		<li><p style="margin-bottom: 0in"><b>Định danh và tra cứu
+		dịch vụ:</b> Naming / Directory services như DNS, Consul,
+		ZooKeeper. 
+		</p></li>
+		<li><p style="margin-bottom: 0in"><b>Xác thực, phân quyền và
+		bảo mật truyền thông:</b> Security services. 
+		</p></li>
+		<li><p style="margin-bottom: 0in"><b>Đồng bộ hóa, quản lý
+		giao dịch phân tán:</b> Transaction management. 
+		</p></li>
+		<li><p><b>Cân bằng tải và giám sát trạng thái hệ
+		thống.</b> 
+		</p></li>
+	</ul>
+</ul>
+<p class="exercise-title">Bài 3: Nhiều hệ thống mạng được
+tổ chức theo mô hình hậu trường và tiền sảnh. Tổ
+chức này phù hợp với bất kỳ chế độ xem nhất quán
+(coherent view) nào mà chúng tôi yêu cầu đối với một hệ
+thống phân tán?</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Bản chất mô hình
+	Front-office &amp; Back-office:</b> 
+	</p>
+	<ul>
+		<li><p style="margin-bottom: 0in"><b>Front-office (Tiền sảnh):</b>
+		Là tầng trực tiếp tiếp nhận và tương tác với người
+		dùng (ví dụ: giao diện Web/Mobile App của ngân hàng, sàn
+		thương mại điện tử, quầy tiếp nhận thông tin). Mục
+		tiêu là phản hồi tức thì, tính sẵn sàng cao và tối
+		ưu trải nghiệm người dùng. 
+		</p></li>
+		<li><p style="margin-bottom: 0in"><b>Back-office (Hậu trường):</b>
+		Là hệ thống xử lý nội bộ chạy ngầm (xử lý theo
+		lô - batch processing, đối soát kế toán, khấu trừ kho
+		bãi thực tế, giao dịch liên ngân hàng). Tầng này ưu
+		tiên tính toàn vẹn và nhất quán dữ liệu hơn là tốc
+		độ phản hồi tức thời. 
+		</p></li>
+	</ul>
+	<li><p style="margin-bottom: 0in"><b>Tính phù hợp với góc
+	nhìn nhất quán (Coherent View):</b> 
+	</p>
+	<ul>
+		<li><p style="margin-bottom: 0in">Mô hình này <b>hoàn toàn phù
+		hợp</b> với góc nhìn nhất quán của một hệ thống
+		phân tán. Góc nhìn nhất quán không bắt buộc mọi máy
+		chủ phải có dữ liệu giống hệt nhau ở từng
+		mili-giây, mà đòi hỏi hệ thống phải tuân thủ một
+		mô hình nhất quán (consistency model) hợp lý theo góc nhìn
+		của người sử dụng. 
+		</p></li>
+		<li><p style="margin-bottom: 0in">Trong mô hình này, hệ thống
+		thường áp dụng mô hình <b>Nhất quán cuối cùng
+		(Eventual Consistency)</b> hoặc <b>Nhất quán nhân quả
+		(Causal Consistency)</b>: 
+		</p>
+		<ul>
+			<li><p style="margin-bottom: 0in">Khi người dùng đặt hàng
+			tại Front-office, hệ thống xác nhận ngay: &quot;Đơn
+			hàng đã tiếp nhận&quot;. 
+			</p></li>
+			<li><p style="margin-bottom: 0in">Yêu cầu được chuyển vào
+			hàng đợi (Message Queue) để Back-office thực hiện trừ
+			tồn kho và xuất hóa đơn phía sau. 
+			</p></li>
+			<li><p>Miễn là các ràng buộc nghiệp vụ không bị vi
+			phạm (không bán khống hàng), người dùng vẫn luôn
+			quan sát thấy một dòng chảy thông tin hợp lý, đồng
+			nhất và tin cậy mà không cần bận tâm đến sự phân
+			tách hay độ trễ xử lý ngầm ở Back-office. 
+			</p></li>
+		</ul>
+	</ul>
+</ul>
+<p class="exercise-title">Bài 4: Giải thích ý nghĩa của tính
+chất trong suốt. Giải thích minh bạch (phân phối minh
+bạch) và đưa ra ví dụ về các loại trong suốt khác
+nhau.</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Ý nghĩa của tính trong
+	suốt (Distribution Transparency):</b> Tính trong suốt trong hệ
+	thống phân tán là khả năng che giấu sự phân tán của
+	các tài nguyên và tiến trình vật lý, làm cho toàn bộ
+	hệ thống xuất hiện trước mắt người dùng và lập
+	trình viên như một hệ thống máy tính tập trung duy nhất
+	(single-system image) thay vì một tập hợp các máy rời rạc
+	kết nối qua mạng. 
+	</p></li>
+	<li><p style="margin-bottom: 0in"><b>Các dạng trong suốt phân
+	tán và ví dụ:</b> 
+	</p>
+	<ul>
+		<li><p style="margin-bottom: 0in"><b>Trong suốt truy cập
+		(Access Transparency):</b> Che giấu sự khác biệt về biểu
+		diễn dữ liệu và cách thức truy xuất tài nguyên. Cú
+		pháp gọi hàm hoặc truy cập dữ liệu cục bộ hay từ
+		xa đều như nhau. <i>Ví dụ:</i> Sử dụng RPC, RMI hoặc
+		gRPC để gọi hàm trên máy chủ từ xa như gọi hàm nội
+		bộ. 
+		</p></li>
+		<li><p style="margin-bottom: 0in"><b>Trong suốt vị trí
+		(Location Transparency):</b> Che giấu vị trí địa lý hoặc
+		địa chỉ IP của tài nguyên; người dùng truy cập tài
+		nguyên thông qua tên logic. <i>Ví dụ:</i> Truy cập website
+		qua URL <code>https://www.google.com</code> hoặc truy cập thư
+		mục NFS <code>/mnt/share</code> mà không cần biết máy chủ
+		thực tế đặt ở đâu. 
+		</p></li>
+		<li><p style="margin-bottom: 0in"><b>Trong suốt di chuyển
+		(Migration Transparency):</b> Che giấu việc một tài nguyên
+		có thể được di dời từ nút mạng này sang nút mạng
+		khác mà không làm gián đoạn việc sử dụng của
+		client. <i>Ví dụ:</i> Di trú sống máy ảo (Live Migration)
+		giữa hai máy chủ vật lý mà các tiến trình không bị
+		gián đoạn. 
+		</p></li>
+		<li><p style="margin-bottom: 0in"><b>Trong suốt tái định vị
+		(Relocation Transparency):</b> Tài nguyên có thể di dời
+		trong khi đang được client truy cập mà kết nối không
+		bị ngắt quãng. <i>Ví dụ:</i> Điện thoại thông minh
+		đang thực hiện cuộc gọi VoIP chuyển trạm phát sóng
+		Wi-Fi/4G (handover) mà cuộc gọi không bị rớt. 
+		</p></li>
+		<li><p style="margin-bottom: 0in"><b>Trong suốt nhân bản
+		(Replication Transparency):</b> Che giấu việc tài nguyên được
+		nhân bản thành nhiều bản sao trên nhiều máy tính để
+		tăng hiệu năng và độ tin cậy. <i>Ví dụ:</i> Cơ sở
+		dữ liệu phân tán (Google Cloud Spanner, Cassandra) tự động
+		sao lưu dữ liệu sang nhiều data center, người dùng chỉ
+		thấy một endpoint duy nhất. 
+		</p></li>
+		<li><p style="margin-bottom: 0in"><b>Trong suốt đồng thời
+		(Concurrency Transparency):</b> Che giấu việc nhiều người
+		dùng cùng truy cập và chỉnh sửa tài nguyên chung cùng
+		lúc mà không gây xung đột dữ liệu. <i>Ví dụ:</i> Hai
+		khách hàng cùng đặt vé xem phim hoặc thực hiện chuyển
+		khoản được hệ thống khóa giao dịch (ACID) điều phối
+		tuần tự, đảm bảo số dư và trạng thái ghế luôn
+		chính xác. 
+		</p></li>
+		<li><p style="margin-bottom: 0in"><b>Trong suốt lỗi (Failure
+		Transparency):</b> Che giấu sự cố hỏng hóc và quá trình
+		tự động khôi phục của tài nguyên. <i>Ví dụ:</i> Khi
+		một web server trong cụm gặp sự cố, bộ cân bằng tải
+		(Load Balancer) tự động chuyển tiếp request sang server
+		khác, người dùng không hề thấy thông báo lỗi. 
+		</p></li>
+		<li><p><b>Trong suốt bền bỉ (Persistence Transparency):</b>
+		Che giấu việc dữ liệu đang nằm trên bộ nhớ RAM hay
+		đã được lưu bền vững xuống ổ đĩa cứng. 
+		</p></li>
+	</ul>
+</ul>
+<p class="exercise-title">Bài 5: Sao đôi khi rất khó để che
+giấu sự cố xảy ra và khôi phục lỗi trong một hệ
+thống phân tích?</p>
+<ol>
+	<li><p style="margin-bottom: 0in"><b>Không thể phân biệt giữa
+	máy sập (Crash) và mạng chậm/nghẽn:</b> Trong mô hình
+	mạng không đồng bộ (Asynchronous Network), khi một máy
+	chủ không phản hồi, hệ thống không thể biết chắc
+	chắn máy chủ đó đã bị chết (dead), tiến trình bị
+	treo, hay chỉ đơn giản do đường truyền mạng bị trễ
+	hoặc mất gói tin. 
+	</p></li>
+	<li><p style="margin-bottom: 0in"><b>Độ trễ phát hiện lỗi
+	ảnh hưởng đến tính trong suốt (Latency Penalty):</b> Việc
+	nhận biết lỗi thường phải dựa vào thời gian chờ
+	(Timeout). Trong thời gian hệ thống chờ timeout và tái
+	định tuyến sang máy chủ khác, người dùng sẽ nhận
+	thấy ứng dụng bị &quot;đơ/lag&quot;. Sự sụt giảm
+	hiệu năng rõ rệt này vô tình làm lộ ra sự cố bên
+	dưới, phá vỡ tính trong suốt lỗi. 
+	</p></li>
+	<li><p style="margin-bottom: 0in"><b>Nguy cơ thực thi trùng lặp
+	và bài toán tính nhất quán:</b> Nếu máy chủ đã xử lý
+	xong yêu cầu nhưng gói tin phản hồi bị mất trên đường
+	về, việc client tự động gửi lại (retry) sang máy chủ
+	khác có thể dẫn đến việc thực hiện hành động hai
+	lần (ví dụ: trừ tiền tài khoản hai lần nếu thao tác
+	không có tính Idempotent). 
+	</p></li>
+	<li><p><b>Hiện tượng phân mảnh mạng (Network Partition /
+	Split-Brain):</b> Khi đường truyền giữa các cụm máy chủ
+	bị đứt, nếu cố che giấu lỗi bằng cách để các cụm
+	tiếp tục phục vụ người dùng độc lập thì dữ liệu
+	ở hai bên sẽ bị phân rã và mâu thuẫn trầm trọng
+	(vấn đề cốt lõi của Định lý CAP). 
+	</p></li>
+</ol>
+<p class="exercise-title">Bài 6: Tại sao không phải lúc nào
+cũng là một ý kiến hay khi cố gắng phát triển khả
+năng trong suốt cao nhất có thể?</p>
+<ol>
+	<li><p style="margin-bottom: 0in"><b>Tổn hao hiệu năng và băng
+	thông (Performance Penalty):</b> Đạt được tính trong suốt
+	tuyệt đối (như trong suốt nhân bản với nhất quán
+	nghiêm ngặt - Strict Consistency) đòi hỏi các giao thức
+	đồng thuận phân tán phức tạp (2-Phase Commit, Paxos,
+	Raft). Các giao thức này yêu cầu trao đổi lượng lớn
+	bản tin mạng và khóa dữ liệu lâu, làm nghẽn hệ thống
+	và tăng vọt độ trễ. 
+	</p></li>
+	<li><p style="margin-bottom: 0in"><b>Giới hạn vật lý về độ
+	trễ truyền dẫn (Physical Latency):</b> Tốc độ tín hiệu
+	trong cáp quang có giới hạn vật lý (~200.000 km/s). Một
+	thao tác gửi từ Việt Nam sang máy chủ ở Mỹ mất ít
+	nhất hàng trăm mili-giây. Cố che giấu vị trí địa lý
+	(Location Transparency) để người dùng tưởng tài nguyên ở
+	cục bộ là điều bất khả thi vì độ trễ vật lý sẽ
+	bộc lộ ngay. 
+	</p></li>
+	<li><p style="margin-bottom: 0in"><b>Nhiều ứng dụng bắt buộc
+	phải nhận biết ngữ cảnh vị trí (Location-aware
+	Services):</b> Trong các ứng dụng như đặt xe (Grab), giao
+	thức ăn, bản đồ chỉ đường, hệ thống bắt buộc
+	phải biết vị trí thực tế của người dùng và phương
+	tiện để cung cấp dịch vụ. Che giấu vị trí trong các
+	trường hợp này sẽ làm mất đi chức năng cốt lõi của
+	ứng dụng. 
+	</p></li>
+	<li><p><b>Triết lý Báo lỗi sớm (Fail-Fast) tốt hơn che
+	giấu mù quáng:</b> Thay vì cố che giấu lỗi bằng cách
+	âm thầm thử lại liên tục khiến màn hình ứng dụng
+	quay vòng vô tận, việc trả về thông báo lỗi rõ ràng
+	ngay lập tức (fail-fast) sẽ giúp ứng dụng hoặc người
+	dùng có giải pháp thay thế kịp thời (ví dụ: chuyển
+	sang thanh toán tiền mặt khi cổng thanh toán trực tuyến
+	bị nghẽn). 
+	</p></li>
+</ol>
+<p class="exercise-title">Bài 7: Thế nào là một hệ thống
+phân tán mở (hệ thống phân tán mở) và tính toán mở
+mang lại những lợi ích gì?</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Định nghĩa:</b> Hệ thống
+	phân tán mở là hệ thống cung cấp các dịch vụ theo
+	các giao diện (interfaces) và giao thức (protocols) chuẩn
+	hóa được công bố công khai (thông qua các ngôn ngữ
+	định nghĩa giao diện như IDL, Protocol Buffers, hoặc các
+	chuẩn RESTful/JSON, HTTP, WSDL). 
+	</p></li>
+	<li><p style="margin-bottom: 0in"><b>Lợi ích của tính mở:</b>
+		</p>
+	<ol>
+		<li><p style="margin-bottom: 0in"><b>Khả năng tương tác
+		(Interoperability):</b> Cho phép các thành phần phần
+		mềm/phần cứng được xây dựng bởi các nhà phát
+		triển độc lập, viết bằng các ngôn ngữ khác nhau có
+		thể dễ dàng liên lạc và cộng tác với nhau. 
+		</p></li>
+		<li><p style="margin-bottom: 0in"><b>Tính khả chuyển
+		(Portability):</b> Một ứng dụng được phát triển cho hệ
+		thống phân tán A có thể chạy trên hệ thống phân tán
+		B mà không cần sửa đổi (hoặc sửa đổi rất ít) mã
+		nguồn, miễn là cả hai đều tuân thủ cùng chuẩn mở.
+				</p></li>
+		<li><p style="margin-bottom: 0in"><b>Khả năng mở rộng và
+		nâng cấp (Extensibility):</b> Cho phép bổ sung các tính
+		năng mới, thay thế hoặc tích hợp thêm các dịch vụ
+		của bên thứ ba vào hệ thống mà không làm ảnh hưởng
+		đến các thành phần đang hoạt động. 
+		</p></li>
+		<li><p><b>Tránh bị khóa bởi nhà cung cấp (Avoid Vendor
+		Lock-in):</b> Giúp tổ chức tự do lựa chọn giải pháp
+		phần cứng và dịch vụ đám mây tối ưu về chi phí
+		thay vì phụ thuộc vào một hãng công nghệ duy nhất. 
+		</p></li>
+	</ol>
+</ul>
+<p class="exercise-title">Bài 8: Mô tả chính xác thế nào là
+một hệ thống có khả năng mở rộng (hệ thống có thể
+mở rộng).</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Định nghĩa chính xác:</b>
+	Một hệ thống được gọi là có khả năng mở rộng
+	(scalable) nếu nó vẫn duy trì được hiệu năng, độ tin
+	cậy và khả năng kiểm soát chấp nhận được khi kích
+	thước hệ thống (số lượng người dùng, dữ liệu
+	hoặc khối lượng công việc) tăng lên đáng kể, bằng
+	cách bổ sung thêm tài nguyên phần cứng tương ứng (CPU,
+	RAM, máy chủ) mà không đòi hỏi phải thay đổi kiến
+	trúc cơ bản của hệ thống. 
+	</p></li>
+	<li><p style="margin-bottom: 0in"><b>Ba chiều đo khả năng mở
+	rộng theo Tanenbaum:</b> 
+	</p>
+	<ol>
+		<li><p style="margin-bottom: 0in"><b>Mở rộng theo quy mô (Size
+		Scalability):</b> Hệ thống có thể dễ dàng bổ sung thêm
+		người dùng và tài nguyên tính toán mà không xuất hiện
+		các điểm nghẽn tập trung (centralized bottlenecks về tài
+		nguyên CPU, bộ nhớ hay một máy chủ duy nhất). 
+		</p></li>
+		<li><p style="margin-bottom: 0in"><b>Mở rộng theo địa lý
+		(Geographical Scalability):</b> Hệ thống vẫn vận hành hiệu
+		quả khi khoảng cách giữa người dùng và các tài nguyên
+		mở rộng từ mạng cục bộ (LAN) ra phạm vi toàn cầu
+		(WAN), xử lý tốt độ trễ mạng và truyền thông bất
+		đồng bộ. 
+		</p></li>
+		<li><p><b>Mở rộng theo quản trị (Administrative
+		Scalability):</b> Hệ thống vẫn dễ quản lý, giám sát và
+		đảm bảo an ninh ngay cả khi nó trải rộng qua nhiều
+		miền quản trị độc lập (nhiều tổ chức, công ty
+		khác nhau) với các chính sách vận hành và bảo mật
+		khác biệt. 
+		</p></li>
+	</ol>
+</ul>
+<p class="exercise-title">Bài 9: Khả năng mở rộng có thể
+đạt được bằng cách áp dụng các kỹ thuật khác nhau.
+Đó là những kỹ thuật nào?</p>
+<ol>
+	<li><p style="margin-bottom: 0in"><b>Ẩn độ trễ truyền thông
+	(Hiding Communication Latencies):</b> 
+	</p>
+	<ul>
+		<li><p style="margin-bottom: 0in">Áp dụng chủ yếu cho việc
+		mở rộng theo địa lý. 
+		</p></li>
+		<li><p style="margin-bottom: 0in">Sử dụng truyền thông bất
+		đồng bộ (Asynchronous Communication): Client gửi yêu cầu
+		và tiếp tục làm việc khác thay vì đứng chờ
+		(blocking); khi server xử lý xong sẽ gửi phản hồi qua
+		callback hoặc hàng đợi tin nhắn. 
+		</p></li>
+		<li><p style="margin-bottom: 0in">Đẩy bớt việc tính
+		toán/tiền xử lý về phía Client hoặc Edge (ví dụ: kiểm
+		tra tính hợp lệ của biểu mẫu bằng JavaScript trên
+		trình duyệt trước khi gửi request lên server). 
+		</p></li>
+	</ul>
+	<li><p style="margin-bottom: 0in"><b>Phân vùng và Phân phối
+	(Partitioning / Distribution):</b> 
+	</p>
+	<ul>
+		<li><p style="margin-bottom: 0in">Chia nhỏ một thành phần
+		lớn (dữ liệu hoặc dịch vụ) thành các phần độc
+		lập và đặt trên nhiều nút máy tính khác nhau để
+		chia tải. 
+		</p></li>
+		<li><p style="margin-bottom: 0in"><i>Ví dụ:</i> Hệ thống
+		phân giải tên miền Internet (DNS) không lưu toàn bộ bản
+		ghi trên 1 máy mà phân cấp thành cấu trúc cây (Root -&gt;
+		TLD -&gt; Authoritative); Kỹ thuật Database Sharding phân chia
+		dữ liệu người dùng thành nhiều phân vùng theo mã định
+		danh. 
+		</p></li>
+	</ul>
+	<li><p style="margin-bottom: 0in"><b>Sao chép và Bộ nhớ đệm
+	(Replication &amp; Caching):</b> 
+	</p>
+	<ul>
+		<li><p style="margin-bottom: 0in"><b>Sao chép (Replication):</b>
+		Tạo ra nhiều bản sao của cùng một tài nguyên/dịch vụ
+		trên nhiều máy chủ để chia sẻ tải đọc và tăng
+		tính sẵn sàng. 
+		</p></li>
+		<li><p style="margin-bottom: 0in"><b>Bộ nhớ đệm (Caching):</b>
+		Lưu trữ tạm thời bản sao dữ liệu tại các vị trí
+		gần người dùng nhất (Browser Cache, Redis Cache, CDN). 
+		</p></li>
+		<li><p><b>Thách thức đi kèm:</b> Khi nhân bản và cache, hệ
+		thống phải giải quyết bài toán duy trì tính nhất quán
+		của dữ liệu (Consistency Problem). 
+		</p></li>
+	</ul>
+</ol>
+<p class="exercise-title">Bài 10: Giair thích khái niệm tổ
+chức ảo (tổ chức ảo) và mẹo ý thức về các tổ
+chức Giải thích có thể được phát triển khai.</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Khái niệm:</b> 
+	</p>
+	<ul>
+		<li><p style="margin-bottom: 0in">Tổ chức ảo (VO) là một
+		liên minh tạm thời của các cá nhân, nhóm nghiên cứu
+		hoặc tổ chức/doanh nghiệp độc lập về mặt địa lý
+		và pháp lý, đồng thuận chia sẻ tài nguyên tính toán,
+		dữ liệu, phần mềm và thiết bị để cùng giải quyết
+		một mục tiêu hoặc dự án chung. Sau khi hoàn thành nhiệm
+		vụ, tổ chức ảo có thể tự giải thể. 
+		</p></li>
+		<li><p style="margin-bottom: 0in"><i>Ví dụ:</i> Các dự án
+		nghiên cứu khoa học toàn cầu (LHC tại CERN liên kết
+		hàng trăm viện nghiên cứu phân tích dữ liệu hạt nhân
+		qua mạng Grid); hoặc liên minh các hãng hàng không chia sẻ
+		hệ thống đặt chỗ vé máy bay (Star Alliance). 
+		</p></li>
+	</ul>
+	<li><p style="margin-bottom: 0in"><b>Cách thức triển khai:</b> 
+	</p></li>
+</ul>
+<ul>
+	<ol>
+		<li><p style="margin-bottom: 0in"><b>Định danh liên kết và
+		Đăng nhập một lần (Federated Identity &amp; Single
+		Sign-On):</b> Sử dụng các chuẩn chứng thực chung (như
+		PKI, SAML, OAuth2) cho phép thành viên của tổ chức A dùng
+		tài khoản của mình để truy cập tài nguyên được
+		chia sẻ tại tổ chức B một cách an toàn. 
+		</p></li>
+		<li><p style="margin-bottom: 0in"><b>Quản lý chính sách kiểm
+		soát truy cập (Access Control Policies):</b> Thiết lập mô
+		hình phân quyền dựa trên vai trò (RBAC) hoặc thuộc tính
+		(ABAC), có thỏa thuận rõ ràng (SLA) về quyền hạn, hạn
+		ngạch (quota) tài nguyên mà mỗi bên được phép sử
+		dụng. 
+		</p></li>
+		<li><p style="margin-bottom: 0in"><b>Phần mềm trung gian
+		Lưới/Đám mây (Grid/Cloud Middleware):</b> Triển khai
+		middleware chuyên dụng (như Globus Toolkit trong Grid
+		Computing, hoặc Kubernetes Multi-Cluster Federation) để tự
+		động hóa việc phát hiện tài nguyên (resource discovery),
+		lập lịch phân bổ tác vụ và giám sát trạng thái hệ
+		thống. 
+		</p></li>
+		<li><p><b>Kiểm toán và Thống kê sử dụng (Accounting &amp;
+		Auditing):</b> Ghi nhật ký chi tiết việc khai thác tài
+		nguyên của từng thành viên nhằm đảm bảo tính minh
+		bạch, chống lạm dụng và phân bổ chi phí công bằng. 
+		</p></li>
+	</ol>
+</ul>
+<p class="exercise-title">Bài 11: Khi một giao dịch (giao dịch)
+bị hủy bỏ (hủy bỏ), người ta thường nói rằng thế
+giới được khôi phục về trạng thái trước đó có thể
+giao dịch chưa từng xảy ra. Thực tế không hoàn toàn như
+vậy. Hãy đưa ra một ví dụ về việc khôi phục lại
+thế giới (đặt lại thế giới) về trạng thái cũ là
+bất khả thi.</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Bản chất vấn đề:</b> 
+	</p>
+	<ul>
+		<li><p style="margin-bottom: 0in">Tính nguyên tử (Atomicity)
+		trong mô hình ACID đảm bảo hệ thống có thể hoàn tác
+		(ROLLBACK) dữ liệu số trên đĩa/bộ nhớ máy tính bằng
+		nhật ký giao dịch (Undo Log / WAL). 
+		</p></li>
+		<li><p style="margin-bottom: 0in">Tuy nhiên, khi một giao dịch
+		tương tác trực tiếp với thế giới vật lý bên ngoài
+		hoặc gửi thông điệp không thể thu hồi ra môi trường
+		ngoài, việc &quot;reset thế giới vật lý&quot; về trạng
+		thái ban đầu là bất khả thi. 
+		</p></li>
+	</ul>
+	<li><p style="margin-bottom: 0in"><b>Các ví dụ điển hình:</b>
+		</p></li>
+</ul>
+<ul>
+	<ol>
+		<li><p style="margin-bottom: 0in"><b>Máy ATM nhả tiền mặt:</b>
+		Quy trình rút tiền gồm 2 bước: (1) Máy ATM nhả tiền
+		mặt ra khe; (2) Trừ số dư trong cơ sở dữ liệu ngân
+		hàng. Giả sử máy ATM đã nhả tiền và khách hàng đã
+		cầm cọc tiền, nhưng sau đó đường truyền mạng đến
+		máy chủ bị đứt làm bước (2) thất bại dẫn đến
+		giao dịch bị ABORT. Hệ thống ngân hàng có thể rollback
+		số dư tài khoản của khách trên phần mềm, nhưng không
+		thể &quot;thu hồi vật lý&quot; cọc tiền đã nằm trong
+		tay khách hàng một cách tự động. 
+		</p></li>
+		<li><p style="margin-bottom: 0in"><b>Gửi tin nhắn SMS / Email:</b>
+		Một giao dịch gửi mã OTP hoặc thông báo xác nhận đơn
+		hàng qua SMS. Sau khi gói tin SMS đã bay qua trạm phát sóng
+		viễn thông đến điện thoại người nhận, giao dịch
+		phía sau gặp sự cố và bị hủy bỏ. Tin nhắn đã hiển
+		thị trên màn hình của người dùng và không thể xóa
+		bỏ khỏi tâm trí họ. 
+		</p></li>
+		<li><p><b>Tự động hóa công nghiệp (Robotics):</b> Cánh
+		tay robot cắt một tấm kim loại hoặc máy in vé xuất
+		xưởng một phôi vé vật lý. Nếu giao dịch logic bị
+		abort sau thời điểm đó, vật liệu đã bị cắt và
+		phôi đã bị in hỏng không thể tự hàn gắn lại như
+		cũ. 
+		</p></li>
+	</ol>
+</ul>
+<p class="exercise-title">Bài 12: Việc thực thi các giao dịch
+lồng nhau (giao dịch lồng nhau) Đòi hỏi một số hình
+thức điều phối. Hãy giải quyết một bộ điều phối
+(điều phối viên) thực sự cần phải làm gì.</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Bản chất giao dịch lồng
+	nhau:</b> Một giao dịch cha cấp cao nhất (top-level
+	transaction) có thể phân nhánh thành nhiều giao dịch con
+	(subtransactions) để chạy song song. Các giao dịch con có
+	thể commit hoặc abort độc lập, nhưng kết quả chỉ trở
+	thành vĩnh viễn khi giao dịch cha commit thành công. 
+	</p></li>
+	<li><p style="margin-bottom: 0in"><b>Nhiệm vụ cụ thể của
+	bộ điều phối (Coordinator):</b> 
+	</p>
+	<ol>
+		<li><p style="margin-bottom: 0in"><b>Quản lý cây phả hệ
+		giao dịch (Transaction Tree Management):</b> Theo dõi toàn bộ
+		cấu trúc thứ bậc quan hệ cha - con, danh sách các giao
+		dịch con đang chạy, đã hoàn tất hoặc đã bị hủy. 
+		</p></li>
+		<li><p style="margin-bottom: 0in"><b>Điều phối khóa và tương
+		tranh (Lock &amp; Concurrency Management):</b> Quản lý quy tắc
+		kế thừa khóa tài nguyên giữa cha và các con, ngăn chặn
+		hiện tượng xung đột dữ liệu hoặc khóa chết
+		(deadlock) giữa các nhánh con. 
+		</p></li>
+		<li><p style="margin-bottom: 0in"><b>Xử lý Commit tạm thời
+		(Provisional Commit):</b> Khi một giao dịch con hoàn thành,
+		bộ điều phối ghi nhận trạng thái commit tạm thời.
+		Dữ liệu chưa được ghi vĩnh viễn xuống đĩa mà chỉ
+		được công bố cho các giao dịch con cùng nhánh cha sử
+		dụng. 
+		</p></li>
+		<li><p style="margin-bottom: 0in"><b>Cô lập và xử lý lỗi
+		cục bộ (Local Abort Recovery):</b> Nếu một giao dịch con
+		bị thất bại (abort), coordinator chịu trách nhiệm thu
+		hồi tài nguyên của nhánh đó và cho phép giao dịch cha
+		thử thực hiện một nhánh con thay thế khác (alternative
+		subtransaction) mà không làm sập toàn bộ giao dịch cha. 
+		</p></li>
+		<li><p><b>Thực thi giao thức kết thúc (Two-Phase Commit -
+		2PC):</b> Khi giao dịch cha hoàn tất, coordinator đóng vai
+		trò chủ trì giao thức 2PC: gửi bản tin Prepare tới tất
+		cả các thành phần tham gia, và chỉ khi tất cả sẵn
+		sàng mới phát lệnh Commit chính thức để lưu vĩnh viễn
+		mọi thay đổi. 
+		</p></li>
+	</ol>
+</ul>
+<p class="exercise-title">Bài 13: Có lập luận cho rằng tính
+trong suốt phân tán có thể không phù hợp với các hệ
+thống phân tán phổ biến (hệ thống phổ biến). Phát
+biểu biểu thức này không đúng đối với tất cả các
+loại trong suốt. Please đưa ra một ví dụ phản hồi.</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Bối cảnh của lập luận:</b>
+	Các hệ thống phổ biến (như nhà thông minh, thiết bị
+	đeo IoT) thường mang tính nhận biết ngữ cảnh
+	(context-aware). Hệ thống cần biết chính xác vị trí của
+	người dùng để kích hoạt thiết bị phù hợp (ví dụ:
+	bật đèn phòng khách khi người dùng vào phòng khách). Do
+	đó, việc che giấu vị trí (Location Transparency) là không
+	phù hợp. 
+	</p></li>
+	<li><p style="margin-bottom: 0in"><b>Ví dụ phản bác (Dạng
+	trong suốt vẫn tối quan trọng):</b> 
+	</p>
+	<ul>
+		<li><p style="margin-bottom: 0in"><b>Trong suốt truy cập
+		(Access Transparency) trong Nhà thông minh (Smart Home):</b> Một
+		ngôi nhà thông minh gồm hàng chục thiết bị từ nhiều
+		hãng khác nhau: cảm biến nhiệt độ (chạy vi điều
+		khiển ARM, sóng Zigbee), bóng đèn thông minh (chạy ESP32,
+		kết nối Wi-Fi/MQTT), khóa cửa (dùng Bluetooth Low Energy).
+		Nhờ có Trong suốt truy cập, ứng dụng quản lý trung
+		tâm (như Apple Home, Home Assistant) và người dùng có thể
+		điều khiển và đọc trạng thái của mọi thiết bị
+		qua một giao diện chung duy nhất (<code>turnOn()</code>,
+		<code>getTemperature()</code>), hoàn toàn che giấu sự khác
+		biệt về tập lệnh vi điều khiển, hệ điều hành
+		nhúng và cấu trúc gói tin nhị phân cấp thấp. 
+		</p></li>
+		<li><p><b>Trong suốt di chuyển (Migration Transparency) trong Y
+		tế (E-Health):</b> Bệnh nhân mang thiết bị đo nhịp tim
+		đeo tay di chuyển giữa các phòng bệnh. Thiết bị tự
+		động chuyển tiếp trạm thu phát sóng không dây (Wi-Fi
+		handover) mà luồng dữ liệu truyền về máy chủ y tế
+		không hề bị gián đoạn hay phải cấu hình lại mạng.
+				</p></li>
+	</ul>
+</ul>
+<p class="exercise-title">Bài 14: Sách đã đưa ra một số ví
+dụ về hệ thống phân tán phổ biến như: hệ thống gia
+đình (hệ thống gia đình), hệ thống chăm sóc sức khỏe
+điện tử (hệ thống chăm sóc sức khỏe điện tử) và
+mạng cảm biến (mạng cảm biến). Vui lòng mở rộng danh
+sách này với nhiều ví dụ khác.</p>
+<p>Ngoài các ví dụ trên, các hệ thống phân tán phổ
+biến tiêu biểu trong thực tế bao gồm:</p>
+<ol>
+	<li><p style="margin-bottom: 0in"><b>Hệ thống giao thông thông
+	minh và Xe tự hành kết nối (Intelligent Transportation
+	Systems - ITS &amp; Connected Vehicles / V2X):</b> Mạng lưới
+	liên lạc giữa phương tiện với phương tiện (V2V), giữa
+	xe với cơ sở hạ tầng giao thông (V2I - đèn tín hiệu,
+	trạm thu phí không dừng ETC) và người đi bộ (V2P). Các
+	xe tự động trao đổi tốc độ, tọa độ theo thời
+	gian thực để cảnh báo va chạm và tối ưu hóa luồng
+	giao thông. 
+	</p></li>
+	<li><p style="margin-bottom: 0in"><b>Lưới điện thông minh
+	(Smart Grid) &amp; Hạ tầng đo đếm nâng cao (AMI):</b> Mạng
+	lưới các đồng hồ đo điện thông minh (Smart Meters) tại
+	từng hộ gia đình liên tục truyền dữ liệu tiêu thụ
+	về trung tâm điều hành, tự động điều tiết công
+	suất phát điện theo phụ tải thực tế và tích hợp
+	các nguồn năng lượng tái tạo phân tán. 
+	</p></li>
+	<li><p style="margin-bottom: 0in"><b>Nông nghiệp thông minh /
+	Nông nghiệp chính xác (Precision Agriculture):</b> Hệ thống
+	hàng nghìn cảm biến đo độ ẩm đất, độ pH, dưỡng
+	chất NPK kết hợp với máy bay không người lái (drone)
+	giám sát cây trồng. Dữ liệu được phân tích để tự
+	động kích hoạt hệ thống tưới tiêu và bón phân chính
+	xác đến từng mét vuông đất. 
+	</p></li>
+	<li><p style="margin-bottom: 0in"><b>Chuỗi cung ứng và Giám
+	sát chuỗi lạnh thông minh (Smart Logistics &amp; Cold Chain
+	Tracking):</b> Sử dụng tem cảm biến RFID/IoT gắn trên các
+	container hàng đông lạnh (vắc-xin, thực phẩm tươi
+	sống). Toàn bộ hành trình vận chuyển, biến động
+	nhiệt độ, độ ẩm và vị trí GPS được giám sát liên
+	tục từ nhà máy đến siêu thị. 
+	</p></li>
+	<li><p><b>Cửa hàng bán lẻ tự động không thu ngân (Smart
+	Retail / Cashierless Stores):</b> Mô hình như Amazon Go: Hệ
+	thống kết hợp camera nhận diện thị giác máy tính trên
+	trần nhà và cảm biến áp lực trên kệ hàng để tự
+	động xác định món hàng khách lấy và tự động trừ
+	tiền qua ví điện tử khi khách bước ra khỏi cửa mà
+	không cần quầy thanh toán. 
+	</p></li>
+</ol>
+<p class="exercise-title">Bài 15 (Bài tập thực hành - Bài tập
+thí nghiệm): Hãy phác thảo thiết kế cho một hệ thống
+gia đình (hệ thống gia đình) bao gồm một máy chủ đa
+phương tiện (máy chủ đa phương tiện) riêng biệt cho
+phép kết nối với một máy khách không dây (máy khách
+không dây). Máy khách này được kết nối với thiết bị
+âm thanh/hình ảnh analog thiết bị và thực hiện chuyển
+đổi các phương tiện kỹ thuật số thành đầu ra
+analog. Máy chủ chạy trên một máy chủ đặc biệt, có
+thể kết nối Internet nhưng không có bàn phím hoặc màn
+hình kết nối trực tiếp.</p>
+</body>
+</html>

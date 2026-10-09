@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<title></title>
+	<style type="text/css">
+		p { text-align: justify; line-height: 135%; margin-bottom: 0.08in; font-size: 12pt; font-family: "Liberation Serif", "Times New Roman", serif; color: #000000 }
+		p.exercise-title { font-size: 12pt; font-weight: bold; margin-top: 0.19in; font-family: "Liberation Serif", "Times New Roman", serif; color: #000000 }
+		ul, ol { margin-top: 0in; margin-bottom: 0.08in; }
+		li { text-align: justify; line-height: 135%; font-size: 12pt; font-family: "Liberation Serif", "Times New Roman", serif; color: #000000; }
+		b, strong { font-weight: bold; color: #000000; }
+		code { font-family: "Liberation Mono", "Courier New", monospace; font-size: 10.5pt; }
+		pre { font-family: "Liberation Mono", "Courier New", monospace; font-size: 10pt; line-height: 120%; margin-top: 0.05in; margin-bottom: 0.08in; }
+	</style>
+</head>
+<body lang="en-US" text="#000000" dir="ltr">
+
+<p class="exercise-title">Bài 1: Nêu ít nhất ba nguồn gây trễ có thể xuất hiện từ lúc đài phát WWV phát sóng tín hiệu thời gian cho tới khi các bộ xử lý trong một hệ thống phân tán thiết lập đồng hồ nội bộ của chúng.</p>
+<p>Các nguồn gây trễ chính trong quá trình tiếp nhận và đồng bộ thời gian từ đài phát sóng vô tuyến chuẩn WWV bao gồm:</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Trễ lan truyền tín hiệu vô tuyến (Radio Signal Propagation Delay):</b> Tín hiệu sóng vô tuyến truyền trong không gian từ đài phát WWV (đặt tại Colorado hoặc Hawaii) qua khí quyển và tầng điện ly tới ăng-ten của máy thu với vận tốc ánh sáng (xấp xỉ 300.000 km/s). Khoảng cách địa lý càng xa và số lần phản xạ sóng qua tầng điện ly càng nhiều thì độ trễ này càng lớn (thường mất từ vài mili-giây đến vài chục mili-giây).</p></li>
+	<li><p style="margin-bottom: 0in"><b>Trễ xử lý phần cứng của thiết bị thu (Receiver Hardware &amp; Demodulation Delay):</b> Thời gian cần thiết để mạch điện tử của bộ thu sóng vô tuyến tiếp nhận tín hiệu cao tần, lọc nhiễu, khuếch đại, giải điều chế và chuyển đổi mã tín hiệu vô tuyến thành dòng dữ liệu nhị phân chứa thông tin thời gian.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Trễ truyền thông giữa máy thu và máy tính (Interface Transfer Delay):</b> Thời gian truyền dữ liệu từ bộ thu thời gian vào bo mạch chủ của máy tính thông qua các giao tiếp như cổng nối tiếp RS-232, cổng USB hoặc qua mạng nội bộ LAN.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Trễ ngắt và lập lịch của hệ điều hành (Interrupt Handling &amp; OS Scheduling Delay):</b> Khi dữ liệu thời gian đến cổng, hệ điều hành phải phát sinh ngắt phần cứng, lưu ngữ cảnh, lập lịch cho luồng xử lý tương ứng và thực hiện lệnh gọi hệ thống (system call như settimeofday) để cập nhật thanh ghi đồng hồ hệ thống. Độ trễ này biến thiên mạnh tùy thuộc vào mức tải của CPU tại thời điểm đó.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 2: Xét hành vi của hai máy tính trong một hệ phân tán. Cả hai đều có đồng hồ được thiết kế để đếm 1000 xung mỗi mili-giây. Một máy đếm đúng, nhưng máy còn lại chỉ đếm được 990 xung mỗi mili-giây. Nếu các bản tin cập nhật UTC đến định kỳ mỗi phút một lần, độ lệch đồng hồ tối đa (maximum clock skew) có thể xảy ra là bao nhiêu?</p>
+<p><b>Phương pháp tính toán chi tiết:</b></p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Tần số danh định của đồng hồ:</b> Mỗi mili-giây có 1000 xung nhịp => Trong 1 giây có 1.000 * 1.000 = 1.000.000 xung nhịp/giây (ticks/s).</p></li>
+	<li><p style="margin-bottom: 0in"><b>Tần số thực tế của hai máy:</b> Máy 1 (chuẩn) đếm đúng 1000 xung/ms = 1.000.000 xung/giây. Máy 2 (bị trôi) chỉ đếm được 990 xung/ms = 990.000 xung/giây.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Tốc độ trôi dạt (Clock Drift Rate):</b> Trong mỗi giây thực tế, máy 2 bị chậm so với máy 1 một lượng: Delta = 1.000.000 - 990.000 = 10.000 xung/giây. Tỷ lệ trôi đồng hồ là: rho = 10.000 / 1.000.000 = 0.01 = 1% (Nghĩa là cứ trôi qua 1 giây thực tế thì máy 2 bị chậm đi 0.01 giây, tương đương 10 mili-giây).</p></li>
+	<li><p style="margin-bottom: 0in"><b>Khoảng thời gian giữa hai lần cập nhật UTC:</b> Delta_t = 1 phút = 60 giây.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Độ lệch đồng hồ tối đa (Maximum Clock Skew):</b> Độ lệch lớn nhất sẽ tích lũy ngay tại thời điểm trước khi bản tin hiệu chỉnh UTC tiếp theo đến (sau 60 giây trôi): <b>Skew_max = 60 s * 0.01 = 0.6 giây = 600 mili-giây</b> (tương đương 600.000 xung nhịp).</p></li>
+</ul>
+
+<p class="exercise-title">Bài 3: Một trong những thiết bị hiện đại đã âm thầm thâm nhập vào các hệ thống phân tán là các bộ thu GPS. Hãy đưa ra các ví dụ về các ứng dụng phân tán có thể sử dụng thông tin GPS.</p>
+<p>Các ứng dụng phân tán tiêu biểu khai thác thông tin từ máy thu GPS:</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Máy chủ thời gian chuẩn cấp cao (NTP Stratum 1 Time Servers):</b> Các máy chủ dịch vụ thời gian được gắn trực tiếp bộ thu GPS để lấy mốc thời gian nguyên tử chính xác tuyệt đối từ các vệ tinh GPS, đóng vai trò là máy chủ Stratum 1 cung cấp mốc thời gian chuẩn cho toàn bộ mạng nội bộ hoặc Internet.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Cơ sở dữ liệu phân tán quy mô toàn cầu (Google Spanner - TrueTime API):</b> Google Spanner tích hợp bộ thu GPS cùng với đồng hồ nguyên tử tại mỗi trung tâm dữ liệu trên toàn cầu. Nhờ thông tin thời gian GPS cực kỳ chính xác, hệ thống có thể đảm bảo thứ tự nhất quán ngoài (External Consistency) cho các giao dịch phân tán toàn cầu mà không cần cơ chế khóa tập trung tốn kém.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Đồng bộ hóa các trạm phát sóng di động tế bào phân tán (Cellular Base Stations - 5G / LTE):</b> Các trạm phát sóng gốc (eNodeB/gNodeB) phân tán trên diện rộng sử dụng tín hiệu thời gian GPS để đồng bộ xung nhịp và khe thời gian (Time Division Duplexing - TDD), ngăn chặn việc các tín hiệu vô tuyến của các trạm lân cận chồng lấn và gây can nhiễu sóng lẫn nhau.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Hệ thống lưới điện thông minh phân tán (Phasor Measurement Units - PMU):</b> Các thiết bị đo góc pha dòng điện xoay chiều đặt tại các trạm biến áp trên khắp đất nước yêu cầu đồng bộ thời gian GPS với độ chính xác dưới 1 micro-giây để phát hiện sớm các bất thường về dao động điện thế, ngăn chặn sự cố mất điện diện rộng.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Hệ thống định vị và điều phối phương tiện giao thông / Logistics thông minh:</b> Các hệ thống phân tán theo dõi vị trí tàu bè, máy bay, xe tải chở hàng theo thời gian thực để lập lộ trình tối ưu và cảnh báo va chạm tự động.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 4: Khi một nút đồng bộ hóa đồng hồ của nó với đồng hồ của một nút khác, việc tính đến các phép đo trước đó thường là một ý tưởng hay. Tại sao? Cho ví dụ về cách áp dụng các lần đọc trong quá khứ.</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Tại sao cần tính đến các phép đo trong quá khứ:</b> Độ trễ truyền gói tin mạng (RTT) trong một phép đo đơn lẻ chịu tác động mạnh bởi hiện tượng biến thiên trễ (Delay Jitter), nghẽn mạng đột xuất hoặc thay đổi tuyến đường tạm thời. Nếu chỉ dựa vào kết quả của một lần đo tức thời duy nhất, giá trị tính toán có thể rơi vào điểm bất thường (outlier), khiến đồng hồ hệ thống bị điều chỉnh giật lùi hoặc nhảy cóc đột ngột, gây mất tính đơn điệu của thời gian. Kết hợp dữ liệu lịch sử giúp lọc bỏ nhiễu ngẫu nhiên, làm mịn dữ liệu đo và ước lượng chính xác hơn tốc độ trôi dạt tự nhiên (drift rate) của tinh thể thạch anh phần cứng.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Ví dụ cách thức áp dụng các số đo trong quá khứ:</b> (1) Kỹ thuật lọc RTT tối thiểu của giao thức NTP: Nút lưu giữ một cửa sổ trượt chứa k phép đo gần nhất (ví dụ k=8). Thay vì lấy trung bình, NTP chọn phép đo có RTT nhỏ nhất trong cửa sổ đó vì tương ứng với lúc mạng thông thoáng nhất, giúp ước lượng độ lệch đồng hồ chính xác nhất. (2) Bộ lọc trung bình động làm mịn lũy thừa (Exponential Smoothing): theta_new = alpha * theta_current + (1 - alpha) * theta_past (với 0 &lt; alpha &lt; 1) giúp điều chỉnh thời gian từ từ mà không làm biến động đột ngột.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 5: Thêm một thông điệp mới vào Hình 6-9 đồng thời (concurrent) với thông điệp A, nghĩa là nó không xảy ra trước A cũng không xảy ra sau A.</p>
+<p>Phân tích theo quan hệ "xảy ra trước" (Happens-Before ->) của Leslie Lamport:</p>
+<ul>
+	<li><p style="margin-bottom: 0in">Trong Hình 6-9, thông điệp A (thông điệp m1) là thông điệp được gửi từ tiến trình P1 lúc đồng hồ logic của P1 = 6 và được tiếp nhận tại tiến trình P2 lúc đồng hồ logic của P2 = 16.</p></li>
+	<li><p style="margin-bottom: 0in">Theo định nghĩa: Hai sự kiện x và y được gọi là đồng thời (x || y) khi và chỉ khi x không xảy ra trước y và y không xảy ra trước x.</p></li>
+	<li><p style="margin-bottom: 0in">Để một thông điệp mới m_new đồng thời với thông điệp A, sự kiện gửi và nhận của m_new không được có mối quan hệ phụ thuộc nhân quả nào tới sự kiện gửi hay nhận của A:</p>
+	<ul>
+		<li><p style="margin-bottom: 0in"><b>Cách thêm 1:</b> Thêm một thông điệp m_new được gửi từ tiến trình P3 sang tiến trình P2, trong đó P3 gửi lúc đồng hồ P3 = 8 và được P2 tiếp nhận lúc đồng hồ P2 = 12 (tức là trước khi P2 tiếp nhận thông điệp A). Vì sự kiện gửi tại P3 độc lập với P1, và sự kiện nhận tại P2 diễn ra trước khi P2 biết đến sự tồn tại của A, nên m_new và A là hoàn toàn đồng thời.</p></li>
+		<li><p style="margin-bottom: 0in"><b>Cách thêm 2:</b> Thêm một thông điệp m_new truyền nội bộ giữa tiến trình P2 và P3 (ví dụ: P2 gửi đi lúc P2 = 8 và P3 nhận lúc P3 = 14). Sự kiện gửi diễn ra trước khi P2 nhận A, nên không có đường dẫn nhân quả nào giữa A và m_new.</p></li>
+	</ul></li>
+</ul>
+
+<p class="exercise-title">Bài 6: Để đạt được truyền thông đa hướng thứ tự toàn phần (Totally-Ordered Multicasting) với nhãn thời gian Lamport, việc mỗi thông điệp đều phải được xác nhận (acknowledged) có phải là điều kiện bắt buộc không?</p>
+<p><b>Bắt buộc phải có xác nhận (ACK) từ tất cả các tiến trình trong nhóm.</b></p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Nguyên lý thuật toán:</b> Trong thuật toán Totally-Ordered Multicast của Lamport, mỗi tiến trình duy trì một hàng đợi cục bộ chứa các thông điệp được sắp xếp theo thứ tự nhãn thời gian (T_m, i) tăng dần.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Điều kiện chuyển giao (Delivery Condition):</b> Một thông điệp m đứng đầu hàng đợi chỉ được phép chuyển giao lên tầng ứng dụng khi và chỉ khi: (1) Nó có nhãn thời gian nhỏ nhất trong hàng đợi hiện tại. (2) Tiến trình đã nhận được một thông điệp (hoặc gói tin xác nhận ACK) từ mọi tiến trình khác trong hệ thống mang nhãn thời gian lớn hơn nhãn thời gian của m.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Lý do bắt buộc:</b> Do mạng có độ trễ truyền thông biến thiên, nếu một tiến trình không gửi ACK, các tiến trình khác sẽ không thể chắc chắn được liệu tiến trình đó có đang gửi một thông điệp khác mang nhãn thời gian nhỏ hơn m nhưng vẫn đang trên đường truyền hay không. Việc thiếu ACK sẽ khiến tiến trình không thể khẳng định tính thứ tự toàn phần và hàng đợi sẽ bị treo vĩnh viễn (bế tắc).</p></li>
+</ul>
+
+<p class="exercise-title">Bài 7: Xét một tầng truyền thông trong đó các thông điệp chỉ được chuyển giao theo đúng thứ tự mà chúng được gửi đi. Hãy đưa ra một ví dụ cho thấy ngay cả thứ tự này đôi khi cũng là sự ràng buộc cứng nhắc không cần thiết.</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Ví dụ minh họa:</b> Xét một ứng dụng máy khách gửi đồng thời hai yêu cầu độc lập tới máy chủ: Thông điệp 1: "Yêu cầu tải tệp tài liệu A"; Thông điệp 2: "Yêu cầu tải hình ảnh B".</p></li>
+	<li><p style="margin-bottom: 0in">Hai yêu cầu này hoàn toàn độc lập về mặt ngữ nghĩa và phục vụ hai thành phần hiển thị khác nhau trên màn hình của người dùng.</p></li>
+	<li><p style="margin-bottom: 0in">Nếu tầng truyền thông bắt buộc chuyển giao theo đúng thứ tự gửi (FIFO Delivery): Khi gói tin của Thông điệp 1 bị mất trên đường truyền hoặc bị lỗi kiểm tra checksum, tầng giao vận phải tạm dừng toàn bộ và gửi yêu cầu truyền lại Thông điệp 1. Trong thời gian đó, Thông điệp 2 dù đã đến nơi an toàn vẫn bị giữ lại trong bộ đệm (hiện tượng Head-of-Line Blocking) và không thể chuyển giao cho ứng dụng.</p></li>
+	<li><p style="margin-bottom: 0in">Sự ràng buộc thứ tự này là hoàn toàn không cần thiết, làm tăng độ trễ vô ích cho các tác vụ độc lập.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 8: Nhiều thuật toán phân tán đòi hỏi phải sử dụng một tiến trình điều phối (coordinating process). Ở mức độ nào thì các thuật toán như vậy thực sự có thể được coi là phân tán? Thảo luận.</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Góc nhìn kiểm soát cục bộ (Mang tính tập trung):</b> Trong trạng thái hoạt động bình thường, nút điều phối chịu trách nhiệm duy nhất về việc ra quyết định (như cấp quyền truy cập vùng găng hoặc gán nhãn giao dịch). Tại thời điểm này, thuật toán mang tính tập trung (centralized control), kế thừa các nhược điểm của hệ tập trung như nguy cơ nghẽn cổ chai và điểm lỗi đơn lẻ.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Góc nhìn kiến trúc tổng thể (Mang tính phân tán cao):</b> Thuật toán vẫn thực sự được coi là <b>phân tán</b> bởi các yếu tố: (1) Không gắn chặt vào phần cứng cụ thể: Vai trò điều phối là vai trò logic, không bị ràng buộc cố định vào bất kỳ máy chủ vật lý nào; bất kỳ nút nào trong mạng cũng có mã nguồn và khả năng trở thành bộ điều phối. (2) Khả năng tự tổ chức và phục hồi tập thể: Khi nút điều phối gặp sự cố, toàn bộ các nút còn lại trong mạng sẽ cùng nhau phối hợp thực thi một thuật toán phân tán (như thuật toán bầu chọn Bully hoặc Ring) để bầu ra một bộ điều phối mới mà không cần sự can thiệp của con người.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 9: Trong phương pháp tiếp cận tập trung để loại trừ tương hỗ (Hình 6-14), khi nhận được thông điệp giải phóng tài nguyên từ một tiến trình, bộ điều phối thường cấp quyền cho tiến trình đầu tiên trong hàng đợi. Hãy đưa ra một thuật toán khả thi khác cho bộ điều phối.</p>
+<p>Các thuật toán lập lịch thay thế cho hàng đợi FIFO truyền thống của bộ điều phối:</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Lập lịch theo mức độ ưu tiên (Priority-based Scheduling):</b> Bộ điều phối duy trì hàng đợi ưu tiên (Priority Queue). Các tiến trình khi gửi yêu cầu gửi kèm mức ưu tiên nghiệp vụ. Khi tài nguyên được giải phóng, quyền truy cập sẽ được trao cho tiến trình có mức độ ưu tiên cao nhất (ví dụ: các tiến trình bảo dưỡng hệ thống hoặc xử lý giao dịch tài chính khẩn cấp).</p></li>
+	<li><p style="margin-bottom: 0in"><b>Lập lịch theo thời gian giữ tài nguyên ngắn nhất (Shortest Job First):</b> Tiến trình gửi kèm thời gian ước tính sẽ sử dụng vùng găng. Bộ điều phối ưu tiên cấp quyền cho tiến trình có thời gian sử dụng ngắn nhất nhằm tối đa hóa thông lượng (throughput) và giảm thời gian chờ trung bình của toàn hệ thống.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Lập lịch công bằng chia sẻ theo trọng số (Fair-Share / Deficit Round Robin):</b> Bộ điều phối ghi nhận lịch sử thời gian sử dụng tài nguyên của từng tiến trình trong quá khứ và ưu tiên cấp quyền cho các tiến trình ít được dùng tài nguyên nhất nhằm ngăn chặn hoàn toàn hiện tượng đói tài nguyên (starvation).</p></li>
+</ul>
+
+<p class="exercise-title">Bài 10: Xem xét lại Hình 6-14. Giả sử bộ điều phối bị sập (crash). Liệu điều này có luôn làm sụp đổ toàn bộ hệ thống không? Nếu không, trường hợp nào xảy ra? Có cách nào để tránh vấn đề này và giúp hệ thống có thể chịu lỗi khi bộ điều phối bị sập không?</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Bộ điều phối sập có luôn làm sập hệ thống không:</b> KHÔNG phải luôn luôn. Nếu tại thời điểm bộ điều phối bị sập, một tiến trình đang ở trong vùng găng và không có tiến trình nào khác muốn vào vùng găng, các tiến trình vẫn tiếp tục thực thi bình thường các phần việc ngoài vùng găng mà không nhận biết sự cố. Sự cố chỉ thực sự làm tê liệt hệ thống khi: (1) Một tiến trình mới muốn vào vùng găng và gửi yêu cầu nhưng bị treo vĩnh viễn vì không có phản hồi; hoặc (2) Tiến trình đang giữ vùng găng thực hiện xong và gửi thông điệp giải phóng nhưng thông điệp bị thất lạc do bộ điều phối đã chết.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Giải pháp giúp hệ thống chịu lỗi:</b> (1) Phát hiện lỗi bằng Timeout và kích hoạt Bầu chọn: Khi tiến trình gửi yêu cầu vào vùng găng và hết thời gian timeout mà không nhận được phản hồi, nó kết luận bộ điều phối đã chết và tự động phát động thuật toán bầu chọn (Bully hoặc Ring) để cả nhóm bầu ra bộ điều phối mới. (2) Nhân bản bộ điều phối theo mô hình đồng thuận (Replicated State Machine via Paxos/Raft): Dùng nhóm 2f+1 nút điều phối đồng thuận (tương tự ZooKeeper hoặc etcd). Hệ thống có thể chịu đựng sự cố sập đồng thời của f nút mà dịch vụ khóa vẫn hoạt động bình thường.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 11: Thuật toán của Ricart và Agrawala gặp vấn đề: nếu một tiến trình bị sập và không trả lời yêu cầu truy cập tài nguyên của tiến trình khác, sự im lặng này sẽ bị hiểu nhầm là từ chối cấp quyền. Sách đã đề xuất giải pháp là mọi yêu cầu phải được trả lời ngay lập tức để dễ phát hiện tiến trình bị sập. Có trường hợp nào mà ngay cả phương pháp này cũng không đủ không? Thảo luận.</p>
+<p>Phương pháp phản hồi ngay lập tức (trả về OK nếu đồng ý hoặc trả về WAIT nếu đang bận) <b>vẫn KHÔNG đủ</b> trong các trường hợp:</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Hiện tượng phân vùng mạng (Network Partitioning):</b> Tiến trình đích vẫn đang hoạt động bình thường nhưng đường truyền mạng giữa hai nút bị đứt tạm thời. Bên yêu cầu không nhận được phản hồi nên kết luận sai rằng tiến trình đích đã chết. Nếu các tiến trình trong phân vùng mạng này bỏ qua tiến trình "đã chết" đó để bước vào vùng găng, hiện tượng vi phạm tính loại trừ tương hỗ (Split-brain) sẽ xảy ra khi tiến trình ở phân vùng kia cũng đang vào vùng găng.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Độ trễ mạng đột biến (Latency Spikes):</b> Do mạng bị nghẽn đột ngột, gói tin phản hồi bị chậm hơn ngưỡng timeout của bên gửi. Bên gửi hiểu lầm là nút đã chết và tiếp tục vào vùng găng trong khi nút kia thực tế chưa đồng ý.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Tiến trình bị tạm dừng do Garbage Collection (GC Pauses / High Load):</b> Tiến trình không sập nhưng bị máy ảo Java hoặc hệ điều hành tạm dừng luồng để dọn rác bộ nhớ, dẫn đến việc không thể gửi phản hồi kịp thời trước thời hạn timeout.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 12: Các mục trong Hình 6-17 thay đổi như thế nào nếu chúng ta giả định rằng các thuật toán có thể được triển khai trên một mạng LAN hỗ trợ phát quảng bá phần cứng (Hardware Broadcast)?</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Thuật toán tập trung (Centralized Algorithm):</b> Số lượng thông điệp vẫn là 3 thông điệp (1 yêu cầu, 1 cấp quyền, 1 giải phóng); độ trễ giữ nguyên là 2 chu kỳ thông điệp.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Thuật toán phân tán (Ricart &amp; Agrawala Algorithm):</b> Trước đây cần n-1 thông điệp yêu cầu unicast tới từng nút, nay bên yêu cầu chỉ cần gửi <b>1 thông điệp phát quảng bá (Broadcast Request)</b> duy nhất tới toàn mạng. Sau đó, n-1 tiến trình còn lại vẫn gửi phản hồi cấp quyền (Grant) độc lập. Tổng số thông điệp giảm mạnh từ 2(n-1) xuống còn: <b>1 + (n - 1) = n thông điệp</b>. Độ trễ trước khi vào vùng găng giảm từ 2(n-1) xuống chỉ còn <b>2 chu kỳ thông điệp</b> (1 lượt broadcast yêu cầu + 1 lượt phản hồi song song).</p></li>
+	<li><p style="margin-bottom: 0in"><b>Thuật toán Token Ring:</b> Không thay đổi. Bản chất thẻ bài (token) vẫn phải được trao tay tuần tự qua từng nút láng giềng dọc theo vòng logic để đảm bảo không có hai nút cùng nắm token một lúc, do đó không thể áp dụng phát quảng bá phần cứng để truyền token.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 13: Một hệ thống phân tán có thể có nhiều tài nguyên độc lập. Giả sử tiến trình 0 muốn truy cập tài nguyên A và tiến trình 1 muốn truy cập tài nguyên B. Thuật toán của Ricart và Agrawala có thể dẫn đến bế tắc (deadlock) không? Giải thích.</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Trường hợp không gây bế tắc:</b> Nếu hệ thống duy trì các thể hiện thuật toán hoàn toàn độc lập cho từng tài nguyên (tức là thông điệp yêu cầu tài nguyên A được xử lý trên một nhóm trạng thái riêng, và tài nguyên B trên một nhóm trạng thái riêng): Tiến trình 0 chỉ hỏi xin quyền truy cập A, tiến trình 1 không cần A nên lập tức trả lời OK. Ngược lại, tiến trình 1 xin quyền truy cập B, tiến trình 0 không cần B nên lập tức trả lời OK. Cả hai tiến trình đều vào vùng găng tương ứng bình thường, không có bế tắc.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Trường hợp gây bế tắc nghiêm trọng:</b> (1) Nếu dùng chung một không gian yêu cầu khóa cho bất kỳ tài nguyên nào, hai tiến trình sẽ chặn lẫn nhau vô lý. (2) Yêu cầu đa tài nguyên lồng nhau (Multiple Resource Allocation): Nếu tiến trình 0 đang giữ tài nguyên A và yêu cầu thêm B, trong khi tiến trình 1 đang giữ tài nguyên B và yêu cầu thêm A. Khi đó xảy ra hiện tượng Bế tắc phân tán (Distributed Deadlock). Để phòng tránh, hệ thống bắt buộc phải áp dụng quy tắc cấp phát tài nguyên theo thứ tự tăng dần cố định toàn cục.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 14: Giả sử hai tiến trình đồng thời phát hiện sự cố của bộ điều phối và cả hai đều quyết định tổ chức bầu cử bằng thuật toán Bully. Điều gì sẽ xảy ra?</p>
+<p><b>Hệ thống vẫn hoạt động chính xác và tự động hợp nhất cuộc bầu cử:</b></p>
+<ul>
+	<li><p style="margin-bottom: 0in">Giả sử hai tiến trình phát hiện cùng lúc là P_i và P_j với i &lt; j.</p></li>
+	<li><p style="margin-bottom: 0in">Cả hai tiến trình đều gửi thông điệp ELECTION tới tất cả các tiến trình có định danh lớn hơn chúng.</p></li>
+	<li><p style="margin-bottom: 0in">Do i &lt; j, tiến trình P_i sẽ gửi thông điệp bầu chọn tới cả P_j.</p></li>
+	<li><p style="margin-bottom: 0in">Khi P_j nhận được thông điệp bầu chọn từ P_i, theo quy tắc của thuật toán Bully, vì j &gt; i, P_j lập tức gửi lại thông điệp OK cho P_i để khẳng định ưu thế của mình.</p></li>
+	<li><p style="margin-bottom: 0in">Khi nhận được OK từ P_j, tiến trình P_i biết có nút số hiệu cao hơn đang nắm quyền điều hành bầu cử, nên P_i lập tức rút lui và ngồi chờ.</p></li>
+	<li><p style="margin-bottom: 0in">Tiến trình P_j tiếp tục tiến hành cuộc bầu cử của nó với các nút cao hơn nó (nếu có). Cuối cùng, tiến trình còn sống có số hiệu lớn nhất trong toàn mạng sẽ giành chiến thắng và gửi thông điệp COORDINATOR tới tất cả các nút. Hệ thống chỉ có duy nhất một bộ điều phối mới và không xảy ra xung đột.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 15: Trong Hình 6-21, chúng ta có hai thông điệp ELECTION lưu hành đồng thời trên vòng. Dù không gây hại gì, nhưng sẽ tao nhã hơn nếu một trong hai thông điệp có thể bị triệt tiêu. Hãy thiết kế một thuật toán để làm điều này mà không ảnh hưởng đến hoạt động của thuật toán bầu chọn cơ bản.</p>
+<p><b>Thuật toán triệt tiêu thông điệp bầu cử dư thừa trên vòng logic:</b></p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Gắn định danh khởi tạo:</b> Mỗi khi một tiến trình P_k phát hiện bộ điều phối sập và tạo ra thông điệp bầu cử, nó gắn thêm nhãn định danh của chính nó vào tiêu đề gói tin: ELECTION(initiator_id, list_of_nodes) với initiator_id = k.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Quy tắc triệt tiêu tại mỗi nút trung gian:</b> Khi một nút P_x nhận được thông điệp ELECTION(initiator_id, list) từ láng giềng phía trước:</p>
+	<ol>
+		<li><p style="margin-bottom: 0in">Nếu nút P_x cũng đang lưu hành một thông điệp bầu cử do chính mình khởi tạo (với mã định danh my_id = x):</p>
+		<ul>
+			<li><p style="margin-bottom: 0in">Nếu initiator_id &lt; my_id: Nút P_x tiến hành hủy bỏ và triệt tiêu (Drop) thông điệp vừa nhận ngay lập tức, không chuyển tiếp nó đi nữa (vì thông điệp do P_x khởi tạo có độ ưu tiên cao hơn và đang lưu hành trên vòng).</p></li>
+			<li><p style="margin-bottom: 0in">Nếu initiator_id &gt; my_id: Nút P_x nhận thấy thông điệp đến từ một nút có độ ưu tiên cao hơn nó, do đó nó tự hủy thông điệp bầu chọn của chính nó và tiếp tục chuyển tiếp thông điệp có initiator_id cao hơn đó theo vòng.</p></li>
+		</ul></li>
+		<li><p style="margin-bottom: 0in">Nếu initiator_id == x: Thông điệp đã đi trọn vẹn 1 vòng quay về nút khởi tạo; P_x chọn nút có ID lớn nhất trong list_of_nodes làm bộ điều phối mới và phát thông điệp COORDINATOR.</p></li>
+	</ol></li>
+	<li><p style="margin-bottom: 0in"><b>Kết quả:</b> Đảm bảo trong mọi trường hợp, chỉ có duy nhất một thông điệp bầu cử (của nút có ID lớn nhất khởi xướng) được hoàn thành vòng quay, triệt tiêu hoàn toàn các thông điệp thừa mà không làm sai lệch kết quả.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 16 (Bài tập thực hành - Lab assignment): Cấu hình hệ thống UNIX để giữ thời gian cục bộ chính xác trong phạm vi 1 giây và cấu hình sao lưu tự động định kỳ 5 phút tối ưu băng thông.</p>
+<p>Quy trình triển khai chi tiết trên môi trường Linux (Ubuntu / Debian):</p>
+<p><b>Phần 1: Cấu hình đồng bộ thời gian tự động chính xác dưới 1 giây bằng Chrony:</b></p>
+<ol>
+	<li><p style="margin-bottom: 0in"><b>Cài đặt dịch vụ Chrony:</b></p>
+	<pre>sudo apt update &amp;&amp; sudo apt install -y chrony</pre></li>
+	<li><p style="margin-bottom: 0in"><b>Chỉnh sửa tệp cấu hình /etc/chrony/chrony.conf trỏ tới các máy chủ NTP chuẩn:</b></p>
+	<pre>server 0.vn.pool.ntp.org iburst
+server 1.vn.pool.ntp.org iburst
+server time.google.com iburst
+makestep 1.0 3</pre></li>
+	<li><p style="margin-bottom: 0in"><b>Khởi động và kiểm tra dịch vụ:</b></p>
+	<pre>sudo systemctl restart chrony
+chronyc tracking
+chronyc sources -v</pre></li>
+</ol>
+
+<p><b>Phần 2: Cấu hình sao lưu tự động mỗi 5 phút tối ưu hóa băng thông bằng Rsync và Cron:</b></p>
+<ol>
+	<li><p style="margin-bottom: 0in"><b>Thiết lập khóa xác thực SSH Key không cần mật khẩu giữa máy nguồn và máy chủ sao lưu từ xa:</b></p>
+	<pre>ssh-keygen -t rsa -b 4096 -N "" -f ~/.ssh/id_rsa
+ssh-copy-id backupuser@remote-backup.local</pre></li>
+	<li><p style="margin-bottom: 0in"><b>Tạo kịch bản sao lưu tối ưu băng thông /usr/local/bin/auto_backup.sh:</b></p>
+	<pre>#!/bin/bash
+SOURCE_DIR="/var/critical_data/"
+DEST_SERVER="backupuser@remote-backup.local"
+DEST_DIR="/data/backups/"
+
+# Sử dụng rsync với nén dữ liệu (-z), thuật toán delta chỉ truyền phần thay đổi
+rsync -avz --partial --delete -e "ssh -o StrictHostKeyChecking=no" "$SOURCE_DIR" "$DEST_SERVER:$DEST_DIR"</pre>
+	<p style="margin-bottom: 0in">Cấp quyền thực thi: <code>sudo chmod +x /usr/local/bin/auto_backup.sh</code>.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Cấu hình lịch chạy tự động 5 phút/lần trong Crontab:</b></p>
+	<pre>crontab -e</pre>
+	<p style="margin-bottom: 0in">Thêm dòng sau vào cuối tệp:</p>
+	<pre>*/5 * * * * /usr/local/bin/auto_backup.sh &gt; /dev/null 2&gt;&amp;1</pre></li>
+</ol>
+</body>
+</html>

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<title></title>
+	<style type="text/css">
+		p { text-align: justify; line-height: 135%; margin-bottom: 0.08in; font-size: 12pt; font-family: "Liberation Serif", "Times New Roman", serif; color: #000000 }
+		p.exercise-title { font-size: 12pt; font-weight: bold; margin-top: 0.19in; font-family: "Liberation Serif", "Times New Roman", serif; color: #000000 }
+		ul, ol { margin-top: 0in; margin-bottom: 0.08in; }
+		li { text-align: justify; line-height: 135%; font-size: 12pt; font-family: "Liberation Serif", "Times New Roman", serif; color: #000000; }
+		b, strong { font-weight: bold; color: #000000; }
+		code { font-family: "Liberation Mono", "Courier New", monospace; font-size: 10.5pt; }
+	</style>
+</head>
+<body lang="en-US" text="#000000" dir="ltr">
+
+<p class="exercise-title">Bài 1: Trong nhiều giao thức phân tầng, mỗi tầng đều có tiêu đề (header) riêng. Chắc chắn sẽ hiệu quả hơn nếu chỉ dùng một header duy nhất ở đầu thông điệp chứa toàn bộ thông tin điều khiển thay vì tách rời. Tại sao người ta không làm như vậy?</p>
+<p>Việc mỗi tầng giao thức duy trì tiêu đề riêng biệt thay vì gom thành một tiêu đề chung duy nhất xuất phát từ các nguyên lý cốt lõi trong thiết kế mạng và hệ thống phân tán:</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Nguyên lý đóng gói và tính độc lập tầng (Encapsulation and Layer Independence):</b> Mô hình phân tầng được thiết kế nhằm tách rời trách nhiệm (Separation of Concerns). Mỗi tầng chỉ xử lý chức năng của mình mà không cần biết định dạng hay hoạt động nội bộ của các tầng khác. Nếu dùng một header chung, tầng dưới phải hiểu rõ cấu trúc của tầng trên, gây phụ thuộc lẫn nhau (tight coupling) và phá vỡ tính module hóa.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Khả năng thay thế và tái sử dụng linh hoạt (Modularity and Reusability):</b> Với header riêng, ta có thể dễ dàng thay đổi hoặc nâng cấp giao thức ở một tầng mà không ảnh hưởng đến các tầng khác (ví dụ: chuyển từ IPv4 sang IPv6 mà các giao thức tầng ứng dụng hay TCP/UDP vẫn giữ nguyên cấu trúc header của chúng).</p></li>
+	<li><p style="margin-bottom: 0in"><b>Xử lý phân mảnh gói tin (Packet Fragmentation):</b> Khi đi qua các mạng có kích thước MTU khác nhau, router có thể phải chia gói tin thành nhiều mảnh nhỏ (fragments). Mỗi mảnh nhỏ đều cần có header riêng của tầng mạng để định tuyến độc lập đến đích. Nếu chỉ có một header chung ở đầu, các mảnh phân đoạn phía sau sẽ không có thông tin điều khiển để định tuyến.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Bảo mật và che giấu thông tin (Information Hiding):</b> Các router trung gian chỉ cần đọc và xử lý IP Header, hoàn toàn không được phép (và không cần thiết) nhìn thấy thông tin điều khiển của tầng giao vận hay dữ liệu ứng dụng.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 2: Tại sao các dịch vụ truyền thông ở tầng giao vận (transport-level communication) lại thường không phù hợp để trực tiếp xây dựng các ứng dụng phân tán?</p>
+<p>Các dịch vụ truyền thông ở tầng giao vận (như Socket TCP hoặc UDP) bộc lộ nhiều hạn chế khi trực tiếp xây dựng ứng dụng phân tán:</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Mức độ trừu tượng quá thấp (Low Level of Abstraction):</b> Tầng giao vận chỉ cung cấp các thao tác đọc/ghi dòng byte thô (Byte Stream của TCP) hoặc gói tin rời rạc (Datagram của UDP). Lập trình viên phải tự quản lý việc đóng mở kết nối, định nghĩa giao thức ứng dụng, tự phân tích cú pháp (parsing) thông điệp và xử lý ranh giới bản tin.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Thiếu tính trong suốt truy cập (Lack of Access Transparency):</b> Lập trình viên phải viết mã xử lý mạng tường minh bằng các hàm send() và recv(), làm lộ rõ sự tồn tại của hạ tầng mạng bên dưới. Điều này đi ngược lại mục tiêu của hệ phân tán là làm cho việc gọi dịch vụ từ xa giống như gọi hàm cục bộ.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Vấn đề không đồng nhất dữ liệu (Heterogeneity of Data Representations):</b> Tầng giao vận không hỗ trợ chuyển đổi biểu diễn dữ liệu giữa các kiến trúc phần cứng khác nhau (thứ tự byte Big-Endian vs. Little-Endian, biểu diễn số thực, mã hóa ký tự).</p></li>
+	<li><p style="margin-bottom: 0in"><b>Xử lý lỗi mạng và phục hồi phức tạp:</b> Các sự cố như đứt kết nối, timeout, gọi lại (retry) đều bị đẩy lên cho mã nguồn ứng dụng tự giải quyết, làm tăng độ phức tạp của phần mềm.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 3: Một dịch vụ multicast tin cậy cho phép bên gửi truyền thông điệp tin cậy tới một nhóm bên nhận. Dịch vụ này nên thuộc về tầng Middleware hay tầng giao thức mức thấp hơn?</p>
+<p>Theo nguyên lý đầu-cuối kinh điển (End-to-End Argument), dịch vụ multicast tin cậy <b>nên thuộc về tầng Middleware (hoặc tầng ứng dụng)</b>:</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Định nghĩa "tin cậy" phụ thuộc vào ngữ cảnh ứng dụng (Application-specific Reliability):</b> Các ứng dụng khác nhau đòi hỏi các mức độ tin cậy hoàn toàn khác nhau. Một số ứng dụng tài chính yêu cầu thứ tự toàn phần (Total-Order Multicast), trong khi hệ thống bảng tin chỉ cần thứ tự nhân quả (Causal Order), và ứng dụng giám sát chỉ cần xác nhận nhận tin tốt nhất có thể (Best-effort với ACK). Nếu đặt ở tầng thấp, giao thức mạng sẽ trở nên cồng kềnh và áp đặt chi phí hiệu năng lên cả những ứng dụng không có nhu cầu.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Vấn đề bão hòa xác nhận (ACK Implosion):</b> Khi nhóm nhận tin có hàng ngàn máy, nếu tầng mạng gửi ACK đồng loạt sẽ làm sụp đổ đường truyền. Tầng Middleware có thể áp dụng các cấu trúc thông minh hơn như cây phủ (overlay tree) hoặc giao thức tin đồn (gossip-based) để phân tán tải xác nhận một cách linh hoạt.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Quản lý thành viên nhóm linh hoạt:</b> Việc thêm, bớt hoặc phát hiện lỗi của các thành viên trong nhóm multicast đòi hỏi logic quản lý trạng thái phức tạp, hoàn toàn phù hợp với tầng Middleware hơn là phần cứng router mạng.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 4: Xét một thủ tục incr có hai tham số nguyên, thủ tục này tăng mỗi tham số lên 1. Giả sử gọi incr(i, i) với i ban đầu bằng 0. Giá trị của i sau khi thực hiện sẽ là bao nhiêu nếu dùng truyền bằng tham chiếu (call-by-reference)? Còn nếu dùng cơ chế sao chép/khôi phục (copy/restore) thì sao?</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Trường hợp 1: Truyền bằng tham chiếu (Call-by-Reference):</b> Cả hai tham số hình thức của hàm đều trỏ trực tiếp tới cùng một vị trí ô nhớ của biến i. Khi tăng tham số thứ nhất: *p1 = *p1 + 1, giá trị tại ô nhớ của i trở thành 1. Tiếp tục khi tăng tham số thứ hai: *p2 = *p2 + 1, giá trị tại ô nhớ của i được tăng tiếp lên 1 nữa. Kết quả cuối cùng: i = 2.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Trường hợp 2: Cơ chế sao chép/khôi phục (Copy/Restore hay In-Out Parameter Passing trong RPC):</b> Khi bắt đầu gọi RPC, giá trị hiện tại của i (= 0) được sao chép độc lập vào hai biến tạm thời trên ngăn xếp: param1 = 0 và param2 = 0. Hàm trên Server thực thi việc tăng độc lập: param1 trở thành 1, và param2 trở thành 1. Khi hàm hoàn thành, Stub thực hiện khôi phục (copy back) các giá trị này vào biến i của bên gọi. Do cả param1 và param2 đều mang giá trị 1, dù thứ tự chép ngược lại là biến nào trước biến nào sau, giá trị cuối cùng được ghi đè vào i vẫn là 1. Kết quả cuối cùng: i = 1.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Bài học kinh nghiệm:</b> Đây là ví dụ kinh điển cho thấy RPC dùng copy/restore không thể mô phỏng hoàn hảo 100% ngữ nghĩa của lời gọi hàm cục bộ dùng con trỏ (call-by-reference) khi có hiện tượng biệt danh (aliasing - nhiều con trỏ cùng trỏ tới một ô nhớ).</p></li>
+</ul>
+
+<p class="exercise-title">Bài 5: Ngôn ngữ C có kiểu union cho phép một trường chứa một trong nhiều kiểu dữ liệu khác nhau. Tại thời điểm chạy, không có cách nào chắc chắn để biết kiểu nào đang được lưu. Tính năng này gây ảnh hưởng/khó khăn gì cho RPC?</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Bản chất của Stub Compiler:</b> Client Stub và Server Stub cần biết chính xác kiểu dữ liệu và độ dài byte của từng tham số để tuần tự hóa (serialize / marshaling) thành dòng byte gửi qua mạng.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Khó khăn với C Union:</b> Một biến union chỉ cấp phát một vùng nhớ chung có độ dài bằng phần tử lớn nhất. Tại thời điểm chạy (runtime), vùng nhớ không chứa siêu dữ liệu (metadata) cho biết giá trị hiện thời đang là kiểu gì (int, float, hay chuỗi). Do đó, Stub không biết phải đọc bao nhiêu byte và chuyển đổi định dạng (endianness/encoding) theo quy tắc nào.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Giải pháp trong hệ phân tán:</b> Các hệ thống RPC (như DCE RPC, Sun XDR, Protobuf) không cho phép dùng union tự do mà bắt buộc phải sử dụng Tagged Union (hay Discriminated Union), tức luôn gắn kèm một trường phân biệt (discriminator/tag) chỉ rõ kiểu dữ liệu thực tế đang được kích hoạt.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 6: Một cách xử lý chuyển đổi tham số trong RPC là máy gửi dùng định dạng gốc của nó, kèm mã chỉ thị kiểu ở byte đầu tiên, máy nhận sẽ tự dịch nếu cần. Tuy nhiên, do việc xác định byte đầu tiên trong từ nhớ cũng là vấn đề khác biệt giữa Big-Endian và Little-Endian, cơ chế này có hoạt động được không?</p>
+<p><b>Cơ chế này hoàn toàn hoạt động được.</b></p>
+<ul>
+	<li><p style="margin-bottom: 0in">Khái niệm Big-Endian và Little-Endian chỉ áp dụng khi CPU diễn giải một từ nhớ chứa nhiều byte (số nguyên 16-bit, 32-bit hoặc 64-bit) thành một giá trị số học.</p></li>
+	<li><p style="margin-bottom: 0in">Khi truyền dữ liệu qua mạng, các byte được truyền tuần tự theo một chuỗi (byte 0, byte 1, byte 2,...).</p></li>
+	<li><p style="margin-bottom: 0in">Nếu mã chỉ thị kiểu được quy ước lưu trong đúng 1 byte đầu tiên (tại địa chỉ offset 0 của gói tin), máy nhận chỉ cần đọc một byte đơn lẻ này vào một biến kiểu ký tự 8-bit (char hoặc uint8_t). Thao tác đọc 1 byte hoàn toàn độc lập với endianness của CPU. Sau khi đọc được byte này, máy nhận sẽ biết máy gửi thuộc kiến trúc nào và tự động áp dụng hàm hoán vị byte (byte swapping) cho phần dữ liệu đa byte tiếp theo nếu cần thiết (cơ chế NDR của DCE RPC).</p></li>
+</ul>
+
+<p class="exercise-title">Bài 7: Giả sử một client gọi một Asynchronous RPC tới server, sau đó đợi cho đến khi server trả kết quả bằng một Asynchronous RPC khác. Cách này có tương đương với việc cho client thực hiện một RPC thông thường không? Nếu thay các Asynchronous RPC bằng Synchronous RPC thì sao?</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>So với RPC thông thường:</b> Về kết quả thì như nhau, nhưng về cơ chế vận hành hệ thống: Trong RPC thông thường, Client bị chặn liên tục trên cùng một kết nối mạng mở. Với hai Asynchronous RPC, kết nối mạng thứ nhất được giải phóng ngay sau khi Client nhận ACK ban đầu; khi xong việc, Server đóng vai trò Client mở kết nối mới (callback) gọi sang Client. Điều này giải phóng luồng và tài nguyên mạng trong thời gian xử lý tác vụ dài.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Nếu thay bằng hai Synchronous RPC:</b> Server sẽ thực hiện một cuộc gọi đồng bộ ngược lại Client. Điều này dẫn tới nguy cơ Bế tắc (Deadlock) nghiêm trọng: Client đang bị chặn chờ phản hồi từ Server, trong khi Server lại bị chặn chờ phản hồi từ cuộc gọi ngược sang Client; nếu Client không có kiến trúc đa luồng, hệ thống sẽ bị treo vĩnh viễn.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 8: Thay vì để server đăng ký cổng động với một daemon (như dced trong DCE RPC), ta có thể chọn cách luôn gán cố định cho nó một endpoint (cổng tĩnh). Nhược điểm chính của phương án này là gì?</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Xung đột số hiệu cổng (Port Conflicts):</b> Không gian số hiệu cổng là hữu hạn (16-bit). Nếu nhiều dịch vụ cùng đòi hỏi cổng tĩnh cố định, chúng sẽ không thể chạy đồng thời trên cùng một máy chủ vật lý.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Không thể chạy nhiều thể hiện đồng thời (Multiple Instances):</b> Không thể khởi chạy song song nhiều bản sao của cùng một server trên cùng một máy để phục vụ kiểm thử, phát triển hoặc dự phòng.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Mất tính linh hoạt trong quản trị:</b> Khi cần thay đổi cấu hình mạng hoặc chuyển đổi máy chủ, toàn bộ các tham chiếu tĩnh đã lưu trữ phía client đều bị vô hiệu hóa, đòi hỏi phải cấu hình lại mã nguồn client.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 9: Việc phân biệt giữa RPC tĩnh (Static RPC) và RPC động (Dynamic RPC) có hữu ích không?</p>
+<p><b>Rất hữu ích</b> vì hai cơ chế này phục vụ các mục đích kiến trúc phần mềm hoàn toàn khác nhau:</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Static RPC:</b> Giao diện dịch vụ và chữ ký hàm được cố định trước tại thời điểm biên dịch thông qua IDL. Client Stub được sinh tự động và liên kết trực tiếp vào mã nguồn, đảm bảo an toàn kiểu dữ liệu cao nhất và tốc độ thực thi tối ưu nhất.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Dynamic RPC:</b> Cho phép Client gọi một thủ tục từ xa mà giao diện của nó chưa hề được biết trước tại thời điểm biên dịch. Tại thời điểm chạy (runtime), ứng dụng truy vấn một kho lưu trữ giao diện (Interface Repository) để tìm hiểu tên hàm và danh sách tham số, sau đó tự động tạo thông điệp yêu cầu (tương tự DII trong CORBA).</p></li>
+	<li><p style="margin-bottom: 0in"><b>Ứng dụng thực tế:</b> Cực kỳ cần thiết cho việc xây dựng API Gateway, bộ định tuyến thông điệp trung gian và các công cụ gỡ lỗi phân tán — những nơi không thể biết trước mọi giao diện dịch vụ trong tương lai.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 10: Mô tả tiến trình truyền thông phi kết nối (Connectionless Communication) giữa một client và một server khi sử dụng giao diện Socket.</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Phía Server:</b> (1) Gọi hàm socket(AF_INET, SOCK_DGRAM, 0) tạo điểm cuối UDP. (2) Gọi hàm bind() gắn với IP cục bộ và cổng định trước. (3) Gọi recvfrom() chuyển sang trạng thái bị chặn chờ gói tin. (4) Tiếp nhận và giải nén dữ liệu, lưu lại IP/cổng của Client. (5) Xử lý và gọi sendto() gửi gói tin kết quả trực tiếp về Client.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Phía Client:</b> (1) Gọi hàm socket(AF_INET, SOCK_DGRAM, 0) tạo socket UDP. (2) Gọi sendto() chỉ định IP/cổng của Server để gửi dữ liệu đi mà không cần thiết lập kết nối trước. (3) Gọi recvfrom() chờ phản hồi từ Server. (4) Đóng socket bằng close() khi hoàn thành.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 11: Giải thích sự khác biệt giữa hai nguyên thủy MPI_bsend và MPI_isend trong MPI.</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>MPI_bsend (Buffered Send):</b> Là lệnh gửi có đệm. Khi được gọi, MPI sao chép dữ liệu từ ứng dụng sang bộ đệm do lập trình viên cấp phát từ trước và hàm trả về ngay. Bên gửi có thể chỉnh sửa biến dữ liệu gốc an toàn ngay sau đó. Nếu bộ đệm bị đầy, hệ thống phát sinh ngoại lệ lỗi.</p></li>
+	<li><p style="margin-bottom: 0in"><b>MPI_isend (Immediate Nonblocking Send):</b> Là lệnh gửi bất đồng bộ không đệm. Hàm trả về quyền điều khiển ngay lập tức kèm Request Handle mà KHÔNG sao chép dữ liệu sang bộ đệm riêng. Bên gửi tuyệt đối không được phép sửa đổi vùng nhớ dữ liệu gốc cho đến khi gọi hàm kiểm tra hoàn tất như MPI_wait() hoặc MPI_test().</p></li>
+</ul>
+
+<p class="exercise-title">Bài 12: Giả sử bạn chỉ có các nguyên thủy truyền thông tạm thời bất đồng bộ, bao gồm cả nguyên thủy nhận bất đồng bộ. Làm thế nào để cài đặt các nguyên thủy cho truyền thông tạm thời đồng bộ?</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Phía Bên gửi (Sender):</b> Bên gửi gọi async_send để đẩy thông điệp đi kèm Message ID. Sau đó, bên gửi tự đưa mình vào trạng thái bị chặn (gọi async_receive định kỳ trong vòng lặp hoặc chờ cờ semaphore). Tiến trình chỉ được giải phóng (unblock) khi nhận được thông điệp xác nhận (ACK) tương ứng từ bên nhận.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Phía Bên nhận (Receiver):</b> Bên nhận dùng async_receive lấy thông điệp. Ngay khi tiếp nhận xong, bên nhận gọi async_send gửi lại thông điệp ACK mang cùng Message ID cho bên gửi.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 13: Giả sử bạn chỉ có các nguyên thủy truyền thông tạm thời đồng bộ. Làm thế nào để cài đặt các nguyên thủy cho truyền thông tạm thời bất đồng bộ?</p>
+<p>Áp dụng kỹ thuật <b>Tiến trình đệm trung gian (Buffer Process)</b> hoặc <b>Luồng nền công nhân (Worker Thread)</b>:</p>
+<ul>
+	<li><p style="margin-bottom: 0in">Khi luồng chính muốn gửi thông điệp bất đồng bộ, nó không gọi hàm gửi đồng bộ qua mạng.</p></li>
+	<li><p style="margin-bottom: 0in">Thay vào đó, nó đẩy thông điệp vào hàng đợi nội bộ trong RAM và bàn giao cho một tiến trình trung gian (hoặc worker thread chạy ngầm). Luồng chính tiếp tục công việc ngay lập tức.</p></li>
+	<li><p style="margin-bottom: 0in">Tiến trình trung gian (hoặc worker thread) thực hiện lệnh gửi đồng bộ (blocking send) qua mạng tới bên nhận và chấp nhận bị chặn chờ cho đến khi hoàn tất.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 14: Có hợp lý không khi cài đặt truyền thông bền bỉ bất đồng bộ (Persistent Asynchronous Communication) bằng cơ chế RPC?</p>
+<p><b>Hoàn toàn hợp lý và có tính thực tiễn cao</b>, với điều kiện RPC được dùng làm <b>công cụ xây dựng hạ tầng bên dưới</b> giữa các trạm trung gian:</p>
+<ul>
+	<li><p style="margin-bottom: 0in">Trong các hệ thống hàng đợi thông điệp (MOM), bên gửi đưa thông điệp vào Queue Manager cục bộ qua một RPC cục bộ ngắn hạn.</p></li>
+	<li><p style="margin-bottom: 0in">Queue Manager ghi thông điệp bền vững vào đĩa cứng (Persistent Storage).</p></li>
+	<li><p style="margin-bottom: 0in">Sau đó, Queue Manager nguồn dùng RPC gọi sang Queue Manager đích để bàn giao thông điệp. Nếu Queue Manager đích ghi đĩa thành công, RPC hoàn tất.</p></li>
+	<li><p style="margin-bottom: 0in">Ứng dụng nhận khi khởi động sẽ đọc tin từ Queue Manager đích. Như vậy, tính chất bền bỉ và bất đồng bộ ở mức ứng dụng vẫn được đảm bảo trọn vẹn.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 15: Trong sách có nêu: để tự động khởi chạy tiến trình lấy thông điệp từ hàng đợi, người ta hay dùng một daemon giám sát. Hãy đưa ra giải pháp thay thế mà không cần dùng daemon.</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Cơ chế ngắt / Tín hiệu của Hệ điều hành (OS Signal / Interrupt-driven Activation):</b> Tích hợp logic kích hoạt trực tiếp vào chính Queue Manager. Khi hàng đợi rỗng nhận được thông điệp mới, Queue Manager trực tiếp gửi tín hiệu hệ thống (như SIGUSR1) hoặc gọi system call fork()/exec() để hệ điều hành khởi tạo ngay tiến trình xử lý tương ứng.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Sử dụng cơ chế Socket Activation (như systemd):</b> Cổng lắng nghe hoặc tệp hàng đợi được quản lý trực tiếp bởi trình khởi tạo hệ thống (init system). Khi có dữ liệu gửi đến, init system mới khởi chạy tiến trình phục vụ theo nhu cầu (on-demand), giúp tiết kiệm tài nguyên khi không có thông điệp.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 16: Bảng định tuyến trong IBM WebSphere MQ thường được cấu hình thủ công. Hãy mô tả một cách đơn giản để tự động hóa cấu hình này.</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Sử dụng thuật toán định tuyến trạng thái liên kết phân tán (Distributed Link-State Routing tương tự OSPF):</b> Mỗi Queue Manager định kỳ gửi quảng bá trạng thái liên kết của mình tới các Queue Manager láng giềng. Các Queue Manager trao đổi thông tin để xây dựng bản đồ cấu trúc toàn mạng và tự động chạy thuật toán Dijkstra tìm đường đi ngắn nhất để thiết lập bảng định tuyến.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Sử dụng kiến trúc phân cụm với kho cấu hình trung tâm (Clustering with Full Repositories):</b> Chỉ định 1 hoặc 2 Queue Manager đóng vai trò Full Repository lưu trữ toàn bộ sơ đồ mạng và vị trí hàng đợi. Khi một Queue Manager mới gia nhập, nó chỉ cần kết nối tới Repository để tự động đăng ký các hàng đợi của mình và tải về bảng định tuyến mới nhất.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 17: Trong truyền thông bền bỉ, bên nhận có bộ đệm cục bộ để lưu thông điệp khi tiến trình chưa chạy. Khi tạo bộ đệm, có thể phải chỉ định kích thước. Hãy đưa ra một lý do ủng hộ và một lý do phản đối việc cố định kích thước này.</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Lý do ủng hộ (Quy định kích thước cố định):</b> Giúp quản trị hệ thống và dự đoán tài nguyên hiệu quả (Predictable Resource Management). Tránh tình trạng một bên nhận bị treo dài ngày dẫn đến việc các thông điệp gửi đến tích tụ vô hạn làm cạn kiệt dung lượng đĩa cứng, gây ảnh hưởng liên đới làm sập máy chủ.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Lý do phản đối (Không quy định kích thước cố định):</b> Làm suy giảm tính bền bỉ và độ tin cậy. Nếu bộ đệm bị đầy trong thời gian bên nhận ngoại tuyến, các thông điệp mới gửi đến sẽ bị từ chối hoặc bị loại bỏ (dropped), làm mất dữ liệu quan trọng và làm mất đi ưu điểm cốt lõi của truyền thông bền bỉ.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 18: Giải thích tại sao truyền thông tạm thời đồng bộ lại gặp vấn đề cố hữu về khả năng mở rộng (scalability), và làm thế nào để giải quyết vấn đề đó?</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Nguyên nhân:</b> (1) Ràng buộc chặt chẽ về thời gian (Temporal Coupling): Bên gửi và bên nhận bắt buộc phải cùng trực tuyến đồng thời. Trong hệ thống quy mô lớn với hàng triệu nút, xác suất để tất cả cùng sẵn sàng là rất thấp. (2) Lãng phí tài nguyên do trạng thái bị chặn (Blocking): Tiến trình gửi bị treo chờ phản hồi, chiếm dụng luồng và bộ nhớ, tạo hiệu ứng tắc nghẽn dây chuyền.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Giải pháp:</b> Chuyển sang mô hình truyền thông bất đồng bộ (Asynchronous) hoặc truyền thông bền bỉ hướng thông điệp (MOM); áp dụng kỹ thuật đệm hàng đợi (Message Queuing); hoặc sử dụng mô hình Xuất bản - Đăng ký (Publish-Subscribe).</p></li>
+</ul>
+
+<p class="exercise-title">Bài 19: Đưa ra một ví dụ mà kỹ thuật multicasting hữu ích đối với các dòng dữ liệu rời rạc (discrete data streams).</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Phân phối bản vá phần mềm và cập nhật hệ điều hành (OS / Software Updates):</b> Khi nhà phát hành phát hành một bản cập nhật bảo mật cho hàng trăm triệu máy tính trên toàn cầu. Bản cập nhật là một tệp nhị phân rời rạc nhưng cần được phát tán đồng loạt tới số lượng người nhận khổng lồ mà không làm nghẽn máy chủ gốc.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Phân phối bảng giá chứng khoán thời gian thực (Stock Market Ticker Data):</b> Giá của các mã cổ phiếu là các bản ghi dữ liệu rời rạc được gửi đồng thời từ sàn giao dịch chứng khoán tới hàng triệu nhà đầu tư và công ty chứng khoán.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 20: Trong mạng cảm biến, nhiệt độ đo được không gắn nhãn thời gian mà gửi ngay cho người vận hành. Liệu việc chỉ đảm bảo độ trễ tối đa (maximum end-to-end delay) đã đủ chưa?</p>
+<p><b>Hoàn toàn KHÔNG đủ.</b></p>
+<ul>
+	<li><p style="margin-bottom: 0in">Do hiện tượng độ biến thiên trễ (Delay Jitter): Giả sử cảm biến đo nhiệt độ T1 = 30°C tại thời điểm t1, và đo T2 = 35°C tại thời điểm t2 (t1 &lt; t2).</p></li>
+	<li><p style="margin-bottom: 0in">Nếu hệ thống chỉ đảm bảo độ trễ tối đa là D_max, gói tin chứa T1 có thể gặp đường truyền tắc nghẽn và bị trễ gần chạm ngưỡng D_max, trong khi gói tin T2 gặp đường truyền thông thoáng và đến đích cực nhanh.</p></li>
+	<li><p style="margin-bottom: 0in">Hậu quả là người vận hành nhận được gói tin T2 trước gói tin T1. Do không có nhãn thời gian (timestamp), người vận hành sẽ hiểu lầm rằng nhiệt độ đang hạ từ 35°C xuống 30°C, trong khi thực tế nhiệt độ đang tăng. Do đó, hệ thống bắt buộc phải đảm bảo chế độ truyền đẳng thời (Isochronous) hoặc bắt buộc phải gắn timestamp tại cảm biến.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 21: Làm thế nào để đảm bảo trễ tối đa (maximum end-to-end delay) khi tập hợp các máy tính được tổ chức theo cấu trúc vòng (ring)?</p>
+<ul>
+	<li><p style="margin-bottom: 0in">Giới hạn số lượng máy tính tối đa (N) tham gia trên vòng logic/vật lý.</p></li>
+	<li><p style="margin-bottom: 0in">Áp dụng cơ chế thẻ bài (Token Ring) với quy định nghiêm ngặt về Thời gian giữ thẻ bài tối đa (Token Holding Time - T_hold): Mỗi máy tính khi nhận được thẻ bài chỉ được phép truyền dữ liệu trong một khoảng thời gian tối đa xác định trước, sau đó bắt buộc phải chuyển tiếp thẻ bài cho nút kế tiếp.</p></li>
+	<li><p style="margin-bottom: 0in">Quy định kích thước hàng đợi đệm cố định và băng thông tối thiểu dành riêng tại mỗi chặng truyền giữa các máy láng giềng. Khi đó trễ tối đa một vòng sẽ được chặn trên bởi N * (T_hold + T_propagation).</p></li>
+</ul>
+
+<p class="exercise-title">Bài 22: Làm thế nào để đảm bảo trễ tối thiểu (minimum end-to-end delay) khi tập hợp các máy tính được tổ chức theo cấu trúc vòng (ring)?</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Sử dụng bộ đệm trễ tại nút đích hoặc nút chuyển tiếp (Delay Buffering):</b> Mỗi thông điệp khi phát ra được gán thời điểm gửi t_send. Nút nhận khi tiếp nhận gói tin tại thời điểm t_recv sẽ tính khoảng thời gian trôi qua delta_t = t_recv - t_send.</p></li>
+	<li><p style="margin-bottom: 0in">Nếu delta_t &lt; D_min (ngưỡng trễ tối thiểu quy định), bộ đệm của nút nhận sẽ giữ lại thông điệp và chỉ giải phóng đưa lên tầng ứng dụng khi thời gian chờ đạt đúng mốc D_min.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 23: Dù multicast khả thi về mặt kỹ thuật, nó rất ít được triển khai trên Internet vì lý do kinh doanh (chưa có mô hình tính phí phù hợp). Bạn có thể đề xuất mô hình kinh doanh nào?</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Mô hình B2B tính phí nhà cung cấp nội dung (Content Provider Billing):</b> Nhà mạng ISP thu phí các nền tảng phát sóng trực tiếp (như Netflix, YouTube, các kênh thể thao trực tiếp) dựa trên lượng băng thông trục mà mạng multicast đã tiết kiệm được cho họ so với việc họ phải mở hàng triệu kết nối unicast độc lập.</p></li>
+	<li><p style="margin-bottom: 0in"><b>Mô hình gói dịch vụ người dùng cao cấp (Premium Consumer Tier):</b> Cung cấp các gói cước Internet gia đình chuyên biệt có hỗ trợ multicast, đảm bảo xem các sự kiện trực tiếp 4K/8K mượt mà tuyệt đối mà không bị nghẽn mạng vào giờ cao điểm.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 24: Thông thường, cây multicast tầng ứng dụng được tối ưu theo độ dãn (stretch - tính theo trễ hoặc số chặng hop). Đưa ra ví dụ cho thấy độ đo này có thể tạo ra cây multicast có hiệu năng rất kém.</p>
+<ul>
+	<li><p style="margin-bottom: 0in"><b>Ví dụ:</b> Giả sử trong mạng có một nút trung gian N_k kết nối mạng qua một đường truyền không dây chập chờn hoặc băng thông rất thấp (như 2G hoặc Wi-Fi yếu), nhưng vị trí địa lý của nó lại nằm ở trung tâm và có độ trễ vật lý (ping RTT) tới các nút khác cực kỳ ngắn.</p></li>
+	<li><p style="margin-bottom: 0in">Nếu thuật toán chỉ tối ưu theo độ trễ hoặc số chặng hop (Stretch), nút N_k sẽ được chọn làm nút cha (nút chia nhánh) cho hàng chục nút con khác trong cây multicast.</p></li>
+	<li><p style="margin-bottom: 0in">Khi nút nguồn phát một luồng dữ liệu chất lượng cao đòi hỏi băng thông lớn, nút N_k sẽ ngay lập tức bị quá tải băng thông (bandwidth bottleneck), làm mất gói hàng loạt và kéo tụt thông lượng của tất cả các nhánh con phía sau nó.</p></li>
+</ul>
+
+<p class="exercise-title">Bài 25: Khi tìm tệp trong mạng P2P phi cấu trúc, việc giới hạn tìm kiếm ở các nút có tệp tương tự nút của bạn sẽ hiệu quả hơn. Giải thích cách giao thức tin đồn (gossiping) giúp tìm ra các nút tương đồng đó.</p>
+<ul>
+	<li><p style="margin-bottom: 0in">Mỗi nút trong mạng duy trì một danh sách hồ sơ (profile) chứa danh mục các tệp mà mình đang lưu trữ và một danh sách các nút láng giềng ưa thích.</p></li>
+	<li><p style="margin-bottom: 0in">Định kỳ theo từng vòng (round), mỗi nút ngẫu nhiên chọn một nút khác trong mạng để trao đổi danh mục tệp thông qua giao thức tin đồn (Anti-entropy).</p></li>
+	<li><p style="margin-bottom: 0in">Mỗi nút sử dụng một hàm đo độ tương đồng ngữ nghĩa (như hệ số Jaccard hoặc Cosine Similarity) để đánh giá mức độ tương đồng giữa hai danh mục tệp. Nếu đối tác có nhiều tệp tương đồng, nút sẽ lưu đối tác vào danh sách láng giềng ngữ nghĩa (Semantic Neighborhood) của mình.</p></li>
+	<li><p style="margin-bottom: 0in">Qua nhiều vòng trao đổi thông tin phi tập trung, các nút có cùng sở thích sẽ tự động kết nối lại tạo thành một Mạng lớp phủ ngữ nghĩa (Semantic Overlay Network). Khi tìm kiếm tệp mới, truy vấn chỉ cần phát tán trong nhóm láng giềng ngữ nghĩa này là có thể tìm thấy dữ liệu nhanh chóng mà không cần phát quảng bá toàn mạng.</p></li>
+</ul>
+</body>
+</html>
